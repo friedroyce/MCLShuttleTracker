@@ -42,10 +42,7 @@ public class Login extends AppCompatActivity {
                     rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            // This method is called once with the initial value and again
-                            // whenever data at this location is updated.
                             if (!dataSnapshot.hasChild(id)) {
-                                // The driver doesn't exist
                                 ShowToast("The user does not exist");
                             }else if (dataSnapshot.child(id).child("Password").getValue().toString().equals(pass)){
                                 ShowToast("User login successful");
@@ -55,7 +52,7 @@ public class Login extends AppCompatActivity {
 
                         @Override
                         public void onCancelled(DatabaseError error) {
-                            // Failed to read value
+                            ShowToast("Failed to read database");
                         }
                     });
                 }
