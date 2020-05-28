@@ -33,9 +33,9 @@ public class LoginActivity extends AppCompatActivity {
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                final String id = txtDriverId.getText().toString();
+                final String driverId = txtDriverId.getText().toString();
                 final String pass = txtPassword.getText().toString();
-                if (id.isEmpty() || pass.isEmpty()){
+                if (driverId.isEmpty() || pass.isEmpty()){
                     ShowToast("Please enter your ID and password");
                 }
                 else{
@@ -43,12 +43,18 @@ public class LoginActivity extends AppCompatActivity {
                     rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (!dataSnapshot.hasChild(id)) {
+                            if (!dataSnapshot.hasChild(driverId))
                                 ShowToast("The user does not exist");
-                            }else if (dataSnapshot.child(id).child("Password").getValue().toString().equals(pass)){
-                                ShowToast("User login successful");
+                            else if (!dataSnapshot.child(driverId).child("password").getValue().toString().equals(pass))
+                                ShowToast("Incorrect credentials");
+                            else {
+                                ShowToast("Login successful");
+
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent.putExtra("driverId", driverId);
+                                startActivityForResult(intent,1);
                             }
-                            else ShowToast("Incorrect credentials");
+
                         }
 
                         @Override
@@ -68,9 +74,5 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    void ShowToast(String message){
-
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-
-    }
+    void ShowToast(String message){ Toast.makeText(this, message, Toast.LENGTH_SHORT).show(); }
 }
