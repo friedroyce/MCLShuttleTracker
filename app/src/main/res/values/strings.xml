@@ -4,6 +4,6 @@
     <string-array name="status">
         <item>In Transit</item>
         <item>Waiting</item>
-        <item>Disable Tracking</item>
+        <item>Tracking Disabled</item>
     </string-array>
 </resources>
