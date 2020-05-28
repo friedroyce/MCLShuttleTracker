@@ -12,6 +12,10 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,8 +26,11 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -33,8 +40,10 @@ public class MainActivity extends AppCompatActivity {
     public static final int FASTEST_UPDATE_INTERVAL = 5;
     private static final int PEMISSIONS_FINE_LOCATION = 99;
     //references to ui elements
-    Switch swTracking, swGPS;
-    TextView txtSensors;
+    Switch swGPS;
+    TextView txtSensors, txtReserved, txtCapacity, txtETA;
+    Spinner spnStatus, spnDestination;
+    Button btnEditProfile, btnDestinations, btnSchedules;
 
     DatabaseReference driver;
 
@@ -48,13 +57,40 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        swTracking = findViewById(R.id.swTracking);
         swGPS = findViewById(R.id.swGPS);
         txtSensors = findViewById(R.id.txtSensors);
+        txtReserved = findViewById(R.id.txtReserved);
+        txtCapacity = findViewById(R.id.txtCapacity);
+        txtETA = findViewById(R.id.txtETA);
+        spnStatus = findViewById(R.id.spnStatus);
+        spnDestination = findViewById(R.id.spnDestination);
+        btnEditProfile = findViewById(R.id.btnEditProfile);
+        btnDestinations = findViewById(R.id.btnDestinations);
+        btnSchedules = findViewById(R.id.btnSchedules);
+
+        ArrayAdapter<String> statusAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.status));
+        statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnStatus.setAdapter(statusAdapter);
+        spnStatus.setSelection(2);
 
         //get driver reference from firebase
         String driverId = getIntent().getStringExtra("driverId");
         driver = FirebaseDatabase.getInstance().getReference("Drivers/" + driverId);
+
+        driver.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                txtCapacity.setText(dataSnapshot.child("capacity").getValue().toString());
+                txtReserved.setText(String.valueOf(dataSnapshot.child("reservations").getChildrenCount()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                //ShowToast("Failed to read database");
+            }
+        });
+
+        txtCapacity.setText(driver.child("capacity").getKey());
 
         //initialize location request
         locationRequest = new LocationRequest();
@@ -86,18 +122,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        swTracking.setOnClickListener(new View.OnClickListener() {
+        spnStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                if(swTracking.isChecked()){
-                    startLocationUpdates();
-                    driver.child("status").setValue(true);
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String status = spnStatus.getSelectedItem().toString();
+
+                switch (status){
+                    case "In Transit":
+                    case "Waiting":
+                        driver.child("status").setValue(status);
+                        startLocationUpdates();
+                        break;
+                    case "Disable Tracking":
+                        driver.child("status").setValue(status);
+                        stopLocationUpdates();
                 }
-                else{
-                    stopLocationUpdates();
-                    driver.child("trackingOn").setValue(false);
-                }
+
             }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) { }
         });
 
         updateGPS();

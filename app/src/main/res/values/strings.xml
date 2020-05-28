@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">MCLShuttleTracker</string>
+
+    <string-array name="status">
+        <item>In Transit</item>
+        <item>Waiting</item>
+        <item>Disable Tracking</item>
+    </string-array>
 </resources>

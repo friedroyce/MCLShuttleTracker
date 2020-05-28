@@ -7,29 +7,116 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reserved Students"
+        android:textSize="16dp" />
 
-    <Switch
-        android:id="@+id/swTracking"
+    <TextView
+        android:id="@+id/txtReserved"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="--"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/txtCapacity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="/--"
+        android:textSize="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:textSize="16dp" />
+
+    <Spinner
+        android:id="@+id/spnStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tracking"
-        android:textSize="20dp"/>
+        android:textSize="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Destination"
+        android:textSize="16dp" />
+
+    <Spinner
+        android:id="@+id/spnDestination"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ETA"
+        android:textSize="16dp" />
+
+    <TextView
+        android:id="@+id/txtETA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="---"
+        android:textSize="20dp" />
 
     <Switch
         android:id="@+id/swGPS"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:checked="true"
-        android:text="Use GPS"
-        android:textSize="20dp"/>
+        android:text="Use GPS"/>
 
     <TextView
         android:id="@+id/txtSensors"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Using cellular towers and WiFi sensors"
+        android:text="Using GPS sensors"
         android:layout_marginLeft="20dp"
         android:layout_marginBottom="25dp"
         android:textSize="16dp" />
+
+    <Button
+        android:id="@+id/btnEditProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:textSize="18dp"
+        android:text="Edit Profile"
+        android:textAllCaps="false"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginRight="75dp"/>
+
+    <Button
+        android:id="@+id/btnDestinations"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:textSize="18dp"
+        android:text="Manage Destinations"
+        android:textAllCaps="false"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginRight="75dp"/>
+
+    <Button
+        android:id="@+id/btnSchedules"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:textSize="18dp"
+        android:text="Departure Schedules"
+        android:textAllCaps="false"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginRight="75dp"/>
 
 </LinearLayout>
