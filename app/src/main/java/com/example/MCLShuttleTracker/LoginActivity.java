@@ -16,10 +16,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
-    Button btnLogin;
-    Button btnRegister;
-    EditText txtDriverId;
-    EditText txtPassword;
+
+    //references to ui elements
+    Button btnLogin, btnRegister;
+    EditText txtDriverId, txtPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

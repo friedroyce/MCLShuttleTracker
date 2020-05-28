@@ -16,13 +16,9 @@ import com.google.firebase.database.ValueEventListener;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    Button btnRegister;
-    Button btnCancel;
-    EditText txtDriverId;
-    EditText txtFirstName;
-    EditText txtLastName;
-    EditText txtPassword;
-    EditText txtConfirmPass;
+    //references to ui elements
+    Button btnRegister, btnCancel;
+    EditText txtDriverId, txtFirstName, txtLastName, txtPassword, txtConfirmPass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
