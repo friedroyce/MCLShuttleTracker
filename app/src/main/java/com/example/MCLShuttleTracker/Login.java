@@ -2,6 +2,7 @@ package com.example.MCLShuttleTracker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -56,6 +57,13 @@ public class Login extends AppCompatActivity {
                         }
                     });
                 }
+            }
+        });
+
+        btnRegister.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(Login.this, RegisterActivity.class);
+                startActivity(intent);
             }
         });
     }
