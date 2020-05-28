@@ -5,7 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:paddingTop="25dp"
+    android:clickable="true"
+    android:focusable="true"
     tools:context=".LoginActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="25dp"
+        android:textSize="28dp" />
 
     <EditText
         android:id="@+id/txtDriverId"
@@ -16,7 +27,7 @@
         android:layout_marginLeft="30dp"
         android:textSize="20dp"
         android:singleLine="true"
-        android:layout_marginTop="100dp"/>
+        android:nextFocusForward="@+id/txtPassword"/>
 
     <EditText
         android:id="@+id/txtPassword"
@@ -26,7 +37,9 @@
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
         android:textSize="20dp"
+        android:inputType="textPassword"
         android:singleLine="true"
+        android:nextFocusForward="@+id/btnLogin"
         android:layout_marginTop="10dp" />
 
     <Button
