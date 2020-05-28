@@ -52,15 +52,15 @@ public class RegisterActivity extends AppCompatActivity {
                     ShowToast("Passwords do not match");
                 }
                 else{
-                    final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference("Drivers");
-                    rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    final DatabaseReference drivers = FirebaseDatabase.getInstance().getReference("Drivers");
+                    drivers.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.hasChild(driverId)) {
                                 ShowToast("A driver with that ID already exists");
                             }
                             else {
-                                DatabaseReference driver = rootRef.child(driverId);
+                                DatabaseReference driver = drivers.child(driverId);
                                 driver.child("firstName").setValue(firstName);
                                 driver.child("lastName").setValue(lastName);
                                 driver.child("password").setValue(password);
