@@ -9,9 +9,27 @@
 
 
     <Switch
-        android:id="@+id/switch1"
+        android:id="@+id/swTracking"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tracking" />
+        android:text="Tracking"
+        android:textSize="20dp"/>
+
+    <Switch
+        android:id="@+id/swGPS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:text="Use GPS"
+        android:textSize="20dp"/>
+
+    <TextView
+        android:id="@+id/txtSensors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Using cellular towers and WiFi sensors"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="25dp"
+        android:textSize="16dp" />
 
 </LinearLayout>
