@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -144,6 +145,14 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parentView) { }
         });
 
+        btnDestinations.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, DestinationsActivity.class);
+                startActivity(intent);
+            }
+        });
+
         updateGPS();
     }//end of on create
 
@@ -233,4 +242,6 @@ public class MainActivity extends AppCompatActivity {
         driver.child("location").child("address").setValue(address);
 
     }
+
+    void ShowToast(String message){ Toast.makeText(this, message, Toast.LENGTH_SHORT).show(); }
 }
