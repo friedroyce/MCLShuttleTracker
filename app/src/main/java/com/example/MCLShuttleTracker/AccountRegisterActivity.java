@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -19,6 +20,7 @@ public class AccountRegisterActivity extends AppCompatActivity {
     //references to ui elements
     Button btnRegister, btnCancel;
     EditText txtDriverId, txtFirstName, txtLastName, txtPassword, txtConfirmPass;
+    NumberPicker numCapacity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,11 @@ public class AccountRegisterActivity extends AppCompatActivity {
         txtLastName = findViewById(R.id.txtLastName);
         txtPassword = findViewById(R.id.txtPassword);
         txtConfirmPass = findViewById(R.id.txtConfirmPass);
+        numCapacity = findViewById(R.id.numCapacity);
+
+        numCapacity.setMaxValue(24);
+        numCapacity.setMinValue(4);
+        numCapacity.setValue(13);
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -40,6 +47,7 @@ public class AccountRegisterActivity extends AppCompatActivity {
                 final String lastName = txtLastName.getText().toString();
                 final String password = txtPassword.getText().toString();
                 final String confirmPass = txtConfirmPass.getText().toString();
+                final int capacity = numCapacity.getValue();
 
                 if (driverId.isEmpty() || firstName.isEmpty() || lastName.isEmpty() || password.isEmpty() || confirmPass.isEmpty()){
                     ShowToast("Please fill out all fields");
@@ -60,6 +68,7 @@ public class AccountRegisterActivity extends AppCompatActivity {
                                 driver.child("firstName").setValue(firstName);
                                 driver.child("lastName").setValue(lastName);
                                 driver.child("password").setValue(password);
+                                driver.child("capacity").setValue(capacity);
 
                                 ShowToast("Registration successful!");
                                 finish();
