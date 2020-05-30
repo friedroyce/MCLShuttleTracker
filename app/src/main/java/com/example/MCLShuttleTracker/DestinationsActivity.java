@@ -1,34 +1,37 @@
 package com.example.MCLShuttleTracker;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.firebase.ui.database.FirebaseListOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
 
 public class DestinationsActivity extends AppCompatActivity {
 
     Button btnAddDestination;
+    RecyclerView recDestinations;
     ListView lstDestinations;
 
-    ArrayList<Destination> destinations = new ArrayList<>();
+
+    ArrayList<DestinationModel> destinations = new ArrayList<>();
+
+    DatabaseReference refDestinations;
+
+    FirebaseListOptions<DestinationModel> options;
 
 
     @Override
@@ -37,42 +40,46 @@ public class DestinationsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_destinations);
 
         btnAddDestination = findViewById(R.id.btnAddDestination);
+        recDestinations = findViewById(R.id.recDestinations);
         lstDestinations = findViewById(R.id.lstDestinations);
 
+        recDestinations.setHasFixedSize(true);
+        recDestinations.setLayoutManager(new LinearLayoutManager(this));
 
-        DatabaseReference refDestinations = FirebaseDatabase.getInstance().getReference("Destinations");
 
+        refDestinations = FirebaseDatabase.getInstance().getReference("Destinations");
 
-        refDestinations.addChildEventListener(new ChildEventListener() {
+        options = new FirebaseListOptions.Builder<DestinationModel>().setQuery(refDestinations, DestinationModel.class).setLayout(R.layout.list_item_destination).build();
+
+        FirebaseListAdapter<DestinationModel> firebaseListAdapter = new FirebaseListAdapter<DestinationModel>(options) {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                String id = dataSnapshot.getKey();
-                String name = dataSnapshot.child("name").getValue().toString();
-                String address = dataSnapshot.child("address").getValue().toString();
-                float latitude = (float) dataSnapshot.child("latitude").getValue();
-                float longitude = (float) dataSnapshot.child("longitude").getValue();
+            protected void populateView(@NonNull View v, @NonNull DestinationModel model, int position) {
 
-                destinations.add(new Destination(id, name, latitude,longitude,address));
+                DatabaseReference itemRef = getRef(position);
+
+                TextView txtName = v.findViewById(R.id.txtDestinationName);
+                TextView txtAddress = v.findViewById(R.id.txtDestinationAddress);
+
+                txtName.setText(model.getName());
+                txtAddress.setText(String.valueOf(model.getAddress()));
+
+                destinations.add(new DestinationModel(itemRef.getKey(), model.getName(), model.getLatitude(), model.getLongitude(), model.getAddress()));
             }
+        };
 
+        firebaseListAdapter.startListening();
+        lstDestinations.setAdapter(firebaseListAdapter);
+
+        lstDestinations.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
+                Intent intent = new Intent(DestinationsActivity.this, DestinationEditActivity.class);
+                intent.putExtra("destinationId", destinations.get(i).getId());
+                intent.putExtra("destinationName", destinations.get(i).getName());
+                intent.putExtra("destinationAddress", destinations.get(i).getAddress());
+                intent.putExtra("destinationLatitude", destinations.get(i).getLatitude());
+                intent.putExtra("destinationLongitude", destinations.get(i).getLongitude());
+                startActivity(intent);
             }
         });
 
