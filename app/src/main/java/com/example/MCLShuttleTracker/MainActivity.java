@@ -217,9 +217,9 @@ public class MainActivity extends AppCompatActivity {
     private void updateDriverLocation(Location location){
         //update driver in firebase database
 
-        final String latitude = String.valueOf(location.getLatitude());
-        final String longitude = String.valueOf(location.getLongitude());
-        final String accuracy = String.valueOf(location.getAccuracy());
+        final double latitude = location.getLatitude();
+        final double longitude = location.getLongitude();
+        final float accuracy = location.getAccuracy();
         String altitude;
         String speed;
         String address;
