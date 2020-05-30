@@ -8,12 +8,12 @@
     android:paddingTop="25dp"
     android:clickable="true"
     android:focusable="true"
-    tools:context=".LoginActivity">
+    tools:context=".AccountRegisterActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:text="Register"
         android:layout_marginLeft="20dp"
         android:layout_marginBottom="25dp"
         android:textSize="28dp" />
@@ -27,7 +27,31 @@
         android:layout_marginLeft="30dp"
         android:textSize="20dp"
         android:singleLine="true"
-        android:nextFocusForward="@+id/txtPassword"/>
+        android:nextFocusForward="@+id/txtFirstName"/>
+
+    <EditText
+        android:id="@+id/txtFirstName"
+        android:hint="First Name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:textSize="20dp"
+        android:singleLine="true"
+        android:nextFocusForward="@+id/txtLastName"
+        android:layout_marginTop="10dp" />
+
+    <EditText
+        android:id="@+id/txtLastName"
+        android:hint="Last Name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:textSize="20dp"
+        android:singleLine="true"
+        android:nextFocusForward="@+id/txtPassword"
+        android:layout_marginTop="10dp" />
 
     <EditText
         android:id="@+id/txtPassword"
@@ -36,24 +60,24 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
-        android:textSize="20dp"
         android:inputType="textPassword"
+        android:textSize="20dp"
         android:singleLine="true"
-        android:nextFocusForward="@+id/btnLogin"
+        android:nextFocusForward="@+id/txtConfirmPass"
         android:layout_marginTop="10dp" />
 
-    <Button
-        android:id="@+id/btnLogin"
+    <EditText
+        android:id="@+id/txtConfirmPass"
+        android:hint="Confirm Password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_columnWeight="1"
-        android:textSize="18dp"
-        android:text="Login"
-        android:textAllCaps="false"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="75dp"
-        android:layout_marginRight="75dp"/>
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:inputType="textPassword"
+        android:textSize="20dp"
+        android:singleLine="true"
+        android:nextFocusForward="@+id/btnRegister"
+        android:layout_marginTop="10dp" />
 
     <Button
         android:id="@+id/btnRegister"
@@ -66,6 +90,19 @@
         android:layout_gravity="center"
         android:layout_marginLeft="75dp"
         android:layout_marginRight="75dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:textSize="18dp"
+        android:text="Cancel"
+        android:textAllCaps="false"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginRight="75dp"/>
 
 </LinearLayout>
