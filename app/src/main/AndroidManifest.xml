@@ -18,8 +18,8 @@
             android:value="AIzaSyACKj8z0tkOsTpJqmg529lfxmulGPnRVf0"/>
         <activity android:name=".DestinationAddActivity"></activity>
         <activity android:name=".DestinationsActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".AccountRegisterActivity" />
+        <activity android:name=".AccountLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

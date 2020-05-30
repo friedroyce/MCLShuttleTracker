@@ -15,7 +15,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class LoginActivity extends AppCompatActivity {
+public class AccountLoginActivity extends AppCompatActivity {
 
     //references to ui elements
     Button btnLogin, btnRegister;
@@ -24,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_account_login);
 
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
                             else {
                                 ShowToast("Login successful");
 
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                Intent intent = new Intent(AccountLoginActivity.this, MainActivity.class);
                                 intent.putExtra("driverId", driverId);
                                 startActivityForResult(intent,1);
                             }
@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                Intent intent = new Intent(AccountLoginActivity.this, AccountRegisterActivity.class);
                 startActivity(intent);
             }
         });

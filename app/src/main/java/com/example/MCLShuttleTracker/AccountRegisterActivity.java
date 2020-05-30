@@ -14,7 +14,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class RegisterActivity extends AppCompatActivity {
+public class AccountRegisterActivity extends AppCompatActivity {
 
     //references to ui elements
     Button btnRegister, btnCancel;
@@ -23,7 +23,7 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_account_register);
 
         btnRegister = findViewById(R.id.btnRegister);
         btnCancel = findViewById(R.id.btnCancel);
