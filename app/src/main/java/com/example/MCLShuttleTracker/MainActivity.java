@@ -46,8 +46,10 @@ public class MainActivity extends AppCompatActivity {
     Spinner spnStatus, spnDestination;
     Button btnEditProfile, btnDestinations, btnSchedules;
 
-    DatabaseReference driver;
+    DatabaseReference refDriver;
+    DatabaseReference refLocation;
     String driverId;
+    String status;
 
     //Google's API for location services
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -77,9 +79,13 @@ public class MainActivity extends AppCompatActivity {
 
         //get driver reference from firebase
         driverId = getIntent().getStringExtra("driverId");
-        driver = FirebaseDatabase.getInstance().getReference("Drivers/" + driverId);
+        refDriver = FirebaseDatabase.getInstance().getReference("Drivers/" + driverId);
 
-        driver.addListenerForSingleValueEvent(new ValueEventListener() {
+        refLocation = FirebaseDatabase.getInstance().getReference("Tracking/" + driverId);
+
+        status = spnStatus.getSelectedItem().toString();
+
+        refDriver.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 txtCapacity.setText(dataSnapshot.child("capacity").getValue().toString());
@@ -92,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        txtCapacity.setText(driver.child("capacity").getKey());
+        txtCapacity.setText(refDriver.child("capacity").getKey());
 
         //initialize location request
         locationRequest = new LocationRequest();
@@ -127,17 +133,18 @@ public class MainActivity extends AppCompatActivity {
         spnStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                String status = spnStatus.getSelectedItem().toString();
+                status = spnStatus.getSelectedItem().toString();
 
                 switch (status){
                     case "In Transit":
                     case "Waiting":
-                        driver.child("status").setValue(status);
+                        refLocation.child("status").setValue(status);
                         startLocationUpdates();
                         break;
-                    case "Disable Tracking":
-                        driver.child("status").setValue(status);
+                    case "Tracking Disabled":
                         stopLocationUpdates();
+                        DatabaseReference destination = FirebaseDatabase.getInstance().getReference("Tracking");
+                        destination.child(driverId).removeValue();
                 }
 
             }
@@ -215,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateDriverLocation(Location location){
-        //update driver in firebase database
+        //update refDriver in firebase database
 
         final double latitude = location.getLatitude();
         final double longitude = location.getLongitude();
@@ -230,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
         else altitude = "Not Available";
 
         if(location.hasSpeed()){
-            speed = String.valueOf(location.getAltitude());
+            speed = String.valueOf(location.getSpeed());
         }
         else speed = "Not Available";
 
@@ -244,12 +251,17 @@ public class MainActivity extends AppCompatActivity {
             address = "Unable to get street address";
         }
 
-        driver.child("location").child("latitude").setValue(latitude);
-        driver.child("location").child("longitude").setValue(longitude);
-        driver.child("location").child("accuracy").setValue(accuracy);
-        driver.child("location").child("altitude").setValue(altitude);
-        driver.child("location").child("speed").setValue(speed);
-        driver.child("location").child("address").setValue(address);
+        switch (status){
+            case "In Transit":
+            case "Waiting":
+                refLocation.child("latitude").setValue(latitude);
+                refLocation.child("longitude").setValue(longitude);
+                refLocation.child("accuracy").setValue(accuracy);
+                refLocation.child("altitude").setValue(altitude);
+                refLocation.child("speed").setValue(speed);
+                refLocation.child("address").setValue(address);
+                break;
+        }
 
     }
 
