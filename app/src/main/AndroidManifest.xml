@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DestinationEditActivity"></activity>
+        <activity android:name=".AccountEditActivity"></activity>
+        <activity android:name=".DestinationEditActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnEditProfile, btnDestinations, btnSchedules;
 
     DatabaseReference driver;
+    String driverId;
 
     //Google's API for location services
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         spnStatus.setSelection(2);
 
         //get driver reference from firebase
-        String driverId = getIntent().getStringExtra("driverId");
+        driverId = getIntent().getStringExtra("driverId");
         driver = FirebaseDatabase.getInstance().getReference("Drivers/" + driverId);
 
         driver.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -149,6 +150,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, DestinationsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, AccountEditActivity.class);
+                intent.putExtra("driverId", driverId);
                 startActivity(intent);
             }
         });
