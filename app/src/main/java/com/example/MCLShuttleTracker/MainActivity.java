@@ -54,11 +54,12 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference refLocation;
     DatabaseReference refDestinations;
     FirebaseListOptions<DestinationModel> options;
-    ArrayList<DestinationModel> destinations = new ArrayList<>();
+    DestinationModel[] destinationArr;
 
     String driverId;
     String status;
     String destinationId;
+    int destinationSelectIndex = 0;
 
     //Google's API for location services
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -106,26 +107,44 @@ public class MainActivity extends AppCompatActivity {
         });
 
         refDestinations = FirebaseDatabase.getInstance().getReference("Destinations");
-        options = new FirebaseListOptions.Builder<DestinationModel>().setQuery(refDestinations, DestinationModel.class).setLayout(R.layout.list_item_destination).build();
-
-        FirebaseListAdapter<DestinationModel> firebaseListAdapter = new FirebaseListAdapter<DestinationModel>(options) {
+        refDestinations.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            protected void populateView(@NonNull View v, @NonNull DestinationModel model, int position) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String count  = String.valueOf(dataSnapshot.getChildrenCount());
+                destinationArr = new DestinationModel[ Integer.valueOf(count)];
 
-                DatabaseReference itemRef = getRef(position);
+                options = new FirebaseListOptions.Builder<DestinationModel>().setQuery(refDestinations, DestinationModel.class).setLayout(R.layout.list_item_destination).build();
 
-                TextView txtName = v.findViewById(R.id.txtDestinationName);
-                TextView txtAddress = v.findViewById(R.id.txtDestinationAddress);
+                FirebaseListAdapter<DestinationModel> firebaseListAdapter = new FirebaseListAdapter<DestinationModel>(options) {
+                    @Override
+                    protected void populateView(@NonNull View v, @NonNull DestinationModel model, int position) {
 
-                txtName.setText(model.getName());
-                txtAddress.setText(String.valueOf(model.getAddress()));
+                        DatabaseReference itemRef = getRef(position);
 
-                destinations.add(new DestinationModel(itemRef.getKey(), model.getName(), model.getLatitude(), model.getLongitude(), model.getAddress()));
+                        TextView txtName = v.findViewById(R.id.txtDestinationName);
+                        TextView txtAddress = v.findViewById(R.id.txtDestinationAddress);
+
+                        txtName.setText(model.getName());
+                        txtAddress.setText(String.valueOf(model.getAddress()));
+                        destinationArr[position] = new DestinationModel();
+                        destinationArr[position].setId(itemRef.getKey());
+                        destinationArr[position].setName(model.getName());
+                        destinationArr[position].setLatitude(model.getLatitude());
+                        destinationArr[position].setLongitude(model.getLongitude());
+                        destinationArr[position].setAddress(model.getAddress());
+
+                    }
+                };
+
+                firebaseListAdapter.startListening();
+                spnDestination.setAdapter(firebaseListAdapter);
             }
-        };
 
-        firebaseListAdapter.startListening();
-        spnDestination.setAdapter(firebaseListAdapter);
+            @Override
+            public void onCancelled(DatabaseError error) {
+                //ShowToast("Failed to read database");
+            }
+        });
 
         txtCapacity.setText(refDriver.child("capacity").getKey());
 
@@ -168,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
                     case "In Transit":
                     case "Waiting":
                         refLocation.child("status").setValue(status);
+                        refLocation.child("destination").setValue(destinationArr[destinationSelectIndex].getId());
                         startLocationUpdates();
                         break;
                     case "Tracking Disabled":
@@ -186,11 +206,11 @@ public class MainActivity extends AppCompatActivity {
         spnDestination.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                destinationId = destinations.get(position).getId();
+                destinationSelectIndex = position;
                 switch (status){
                     case "In Transit":
                     case "Waiting":
-                        refLocation.child("destination").setValue(destinationId);
+                        refLocation.child("destination").setValue(destinationArr[destinationSelectIndex].getId());
                         break;
                 }
             }
@@ -306,8 +326,7 @@ public class MainActivity extends AppCompatActivity {
                 refLocation.child("altitude").setValue(altitude);
                 refLocation.child("speed").setValue(speed);
                 refLocation.child("address").setValue(address);
-                destinationId = destinations.get(spnDestination.getSelectedItemPosition()).getId();
-                refLocation.child("destination").setValue(destinationId);
+                refLocation.child("destination").setValue(destinationArr[destinationSelectIndex].getId());
                 break;
         }
 
