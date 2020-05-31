@@ -2,8 +2,6 @@ package com.example.MCLShuttleTracker;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,9 +21,7 @@ import java.util.ArrayList;
 public class DestinationsActivity extends AppCompatActivity {
 
     Button btnAddDestination;
-    RecyclerView recDestinations;
     ListView lstDestinations;
-
 
     ArrayList<DestinationModel> destinations = new ArrayList<>();
 
@@ -40,12 +36,7 @@ public class DestinationsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_destinations);
 
         btnAddDestination = findViewById(R.id.btnAddDestination);
-        recDestinations = findViewById(R.id.recDestinations);
         lstDestinations = findViewById(R.id.lstDestinations);
-
-        recDestinations.setHasFixedSize(true);
-        recDestinations.setLayoutManager(new LinearLayoutManager(this));
-
 
         refDestinations = FirebaseDatabase.getInstance().getReference("Destinations");
 
