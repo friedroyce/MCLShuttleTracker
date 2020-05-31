@@ -30,11 +30,6 @@
             android:background="@color/cardview_light_background"
             app:cardCornerRadius="8dp">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recDestinations"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
             <ListView
                 android:id="@+id/lstDestinations"
                 android:layout_width="match_parent"
