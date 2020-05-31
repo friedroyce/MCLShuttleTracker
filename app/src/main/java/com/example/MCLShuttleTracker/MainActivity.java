@@ -21,6 +21,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.database.FirebaseListOptions;
+import com.google.android.datatransport.runtime.Destination;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -33,6 +36,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,8 +52,13 @@ public class MainActivity extends AppCompatActivity {
 
     DatabaseReference refDriver;
     DatabaseReference refLocation;
+    DatabaseReference refDestinations;
+    FirebaseListOptions<DestinationModel> options;
+    ArrayList<DestinationModel> destinations = new ArrayList<>();
+
     String driverId;
     String status;
+    String destinationId;
 
     //Google's API for location services
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -76,11 +85,9 @@ public class MainActivity extends AppCompatActivity {
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spnStatus.setAdapter(statusAdapter);
         spnStatus.setSelection(2);
-
         //get driver reference from firebase
         driverId = getIntent().getStringExtra("driverId");
         refDriver = FirebaseDatabase.getInstance().getReference("Drivers/" + driverId);
-
         refLocation = FirebaseDatabase.getInstance().getReference("Tracking/" + driverId);
 
         status = spnStatus.getSelectedItem().toString();
@@ -97,6 +104,28 @@ public class MainActivity extends AppCompatActivity {
                 //ShowToast("Failed to read database");
             }
         });
+
+        refDestinations = FirebaseDatabase.getInstance().getReference("Destinations");
+        options = new FirebaseListOptions.Builder<DestinationModel>().setQuery(refDestinations, DestinationModel.class).setLayout(R.layout.list_item_destination).build();
+
+        FirebaseListAdapter<DestinationModel> firebaseListAdapter = new FirebaseListAdapter<DestinationModel>(options) {
+            @Override
+            protected void populateView(@NonNull View v, @NonNull DestinationModel model, int position) {
+
+                DatabaseReference itemRef = getRef(position);
+
+                TextView txtName = v.findViewById(R.id.txtDestinationName);
+                TextView txtAddress = v.findViewById(R.id.txtDestinationAddress);
+
+                txtName.setText(model.getName());
+                txtAddress.setText(String.valueOf(model.getAddress()));
+
+                destinations.add(new DestinationModel(itemRef.getKey(), model.getName(), model.getLatitude(), model.getLongitude(), model.getAddress()));
+            }
+        };
+
+        firebaseListAdapter.startListening();
+        spnDestination.setAdapter(firebaseListAdapter);
 
         txtCapacity.setText(refDriver.child("capacity").getKey());
 
@@ -143,10 +172,27 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case "Tracking Disabled":
                         stopLocationUpdates();
-                        DatabaseReference destination = FirebaseDatabase.getInstance().getReference("Tracking");
-                        destination.child(driverId).removeValue();
+                        DatabaseReference tracking = FirebaseDatabase.getInstance().getReference("Tracking");
+                        tracking.child(driverId).removeValue();
+                        //this removes tracking coordinates so it wont appear in the reservation app
                 }
 
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) { }
+        });
+
+        spnDestination.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                destinationId = destinations.get(position).getId();
+                switch (status){
+                    case "In Transit":
+                    case "Waiting":
+                        refLocation.child("destination").setValue(destinationId);
+                        break;
+                }
             }
 
             @Override
@@ -260,6 +306,8 @@ public class MainActivity extends AppCompatActivity {
                 refLocation.child("altitude").setValue(altitude);
                 refLocation.child("speed").setValue(speed);
                 refLocation.child("address").setValue(address);
+                destinationId = destinations.get(spnDestination.getSelectedItemPosition()).getId();
+                refLocation.child("destination").setValue(destinationId);
                 break;
         }
 
