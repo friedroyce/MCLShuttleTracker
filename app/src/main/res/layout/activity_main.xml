@@ -61,7 +61,6 @@
             android:text="Using GPS sensors"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="20dp"
-            android:layout_marginBottom="25dp"
             android:textSize="16dp" />
 
     </GridLayout>
@@ -71,6 +70,7 @@
         android:layout_height="wrap_content"
         android:text="Destination"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
         android:textSize="16dp" />
 
     <Spinner
@@ -85,6 +85,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Status"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:textSize="16dp" />
 
@@ -97,23 +98,12 @@
         android:textSize="20dp" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ETA"
-        android:textSize="16dp" />
-
-    <TextView
-        android:id="@+id/txtETA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="---"
-        android:textSize="20dp" />
-
-    <TextView
         android:id="@+id/txtReservations"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Reserved Students (-/-)"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
         android:textSize="16dp" />
 
     <Button

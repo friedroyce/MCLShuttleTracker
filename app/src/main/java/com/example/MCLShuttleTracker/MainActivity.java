@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
         swTracking = findViewById(R.id.swTracking);
         txtSensors = findViewById(R.id.txtSensors);
         txtStatus = findViewById(R.id.txtStatus);
-        txtETA = findViewById(R.id.txtETA);
         txtTracking = findViewById(R.id.txtTracking);
         txtReservations = findViewById(R.id.txtReservations);
         spnDestination = findViewById(R.id.spnDestination);
