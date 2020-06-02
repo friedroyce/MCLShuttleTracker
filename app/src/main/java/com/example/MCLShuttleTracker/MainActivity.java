@@ -45,21 +45,22 @@ public class MainActivity extends AppCompatActivity {
     public static final int FASTEST_UPDATE_INTERVAL = 5;
     private static final int PEMISSIONS_FINE_LOCATION = 99;
     //references to ui elements
-    Switch swGPS;
-    TextView txtSensors, txtReserved, txtCapacity, txtETA;
-    Spinner spnStatus, spnDestination;
-    Button btnEditProfile, btnDestinations, btnSchedules;
+    Switch swGPS, swTracking;
+    TextView txtSensors, txtTracking, txtReservations, txtETA, txtStatus;
+    Spinner spnDestination;
+    Button btnEditProfile, btnDestinations, btnSchedules, btnStatus;
 
+    DatabaseReference refRoot;
     DatabaseReference refDriver;
     DatabaseReference refLocation;
     DatabaseReference refDestinations;
+    DatabaseReference refReservations;
     FirebaseListOptions<DestinationModel> options;
     DestinationModel[] destinationArr;
 
     String driverId;
     String status;
-    String destinationId;
-    int destinationSelectIndex = 0;
+    int destinationSelectIndex = 0, reservation = 0, capacity = 0;
 
     //Google's API for location services
     FusedLocationProviderClient fusedLocationProviderClient;
@@ -72,32 +73,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         swGPS = findViewById(R.id.swGPS);
+        swTracking = findViewById(R.id.swTracking);
         txtSensors = findViewById(R.id.txtSensors);
-        txtReserved = findViewById(R.id.txtReserved);
-        txtCapacity = findViewById(R.id.txtCapacity);
+        txtStatus = findViewById(R.id.txtStatus);
         txtETA = findViewById(R.id.txtETA);
-        spnStatus = findViewById(R.id.spnStatus);
+        txtTracking = findViewById(R.id.txtTracking);
+        txtReservations = findViewById(R.id.txtReservations);
         spnDestination = findViewById(R.id.spnDestination);
         btnEditProfile = findViewById(R.id.btnEditProfile);
         btnDestinations = findViewById(R.id.btnDestinations);
         btnSchedules = findViewById(R.id.btnSchedules);
+        btnStatus = findViewById(R.id.btnStatus);
 
-        ArrayAdapter<String> statusAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.status));
-        statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spnStatus.setAdapter(statusAdapter);
-        spnStatus.setSelection(2);
         //get driver reference from firebase
         driverId = getIntent().getStringExtra("driverId");
-        refDriver = FirebaseDatabase.getInstance().getReference("Drivers/" + driverId);
-        refLocation = FirebaseDatabase.getInstance().getReference("Tracking/" + driverId);
+        refRoot = FirebaseDatabase.getInstance().getReference();
+        refDriver = refRoot.child("Drivers/" + driverId);
+        refLocation = refRoot.child("Tracking/" + driverId);
+        refReservations = refRoot.child("Reservations/" + driverId);
+        refDestinations = refRoot.child("Destinations");
 
-        status = spnStatus.getSelectedItem().toString();
+        status = "Waiting";
 
         refDriver.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                txtCapacity.setText(dataSnapshot.child("capacity").getValue().toString());
-                txtReserved.setText(String.valueOf(dataSnapshot.child("reservations").getChildrenCount()));
+                capacity = Integer.valueOf(dataSnapshot.child("capacity").getValue().toString());
+                updateUI();
             }
 
             @Override
@@ -106,7 +108,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        refDestinations = FirebaseDatabase.getInstance().getReference("Destinations");
+        refReservations.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                reservation = (int) dataSnapshot.getChildrenCount();
+                updateUI();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         refDestinations.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -146,8 +159,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        txtCapacity.setText(refDriver.child("capacity").getKey());
-
         //initialize location request
         locationRequest = new LocationRequest();
         locationRequest.setInterval(1000 * DEFAULT_UPDATE_INTERVAL);
@@ -178,29 +189,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        spnStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        swTracking.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                status = spnStatus.getSelectedItem().toString();
-
-                switch (status){
-                    case "In Transit":
-                    case "Waiting":
-                        refLocation.child("status").setValue(status);
-                        refLocation.child("destination").setValue(destinationArr[destinationSelectIndex].getId());
-                        startLocationUpdates();
-                        break;
-                    case "Tracking Disabled":
-                        stopLocationUpdates();
-                        DatabaseReference tracking = FirebaseDatabase.getInstance().getReference("Tracking");
-                        tracking.child(driverId).removeValue();
-                        //this removes tracking coordinates so it wont appear in the reservation app
+            public void onClick(View view) {
+                if(swTracking.isChecked()){
+                    refLocation.child("status").setValue(status);
+                    refLocation.child("destination").setValue(destinationArr[destinationSelectIndex].getId());
+                    startLocationUpdates();
                 }
-
+                else {
+                    stopLocationUpdates();
+                    DatabaseReference tracking = FirebaseDatabase.getInstance().getReference("Tracking");
+                    tracking.child(driverId).removeValue();
+                }
+                updateUI();
             }
+        });
 
+        btnStatus.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onNothingSelected(AdapterView<?> parentView) { }
+            public void onClick(View view) {
+                if (status.equals("Waiting")){
+                    status = "In Transit";
+                    refLocation.child("status").setValue(status);
+                }
+                else{
+                    status = "Waiting";
+                    refLocation.child("status").setValue(status);
+                    refReservations.removeValue();
+                }
+                updateUI();
+            }
         });
 
         spnDestination.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -238,6 +257,43 @@ public class MainActivity extends AppCompatActivity {
 
         updateGPS();
     }//end of on create
+
+    private void updateUI(){
+
+        txtReservations.setText("Reserved Students (" + reservation + "/" + capacity + ")");
+
+        if (status.equals("Waiting")){
+            btnStatus.setText("Depart");
+            swTracking.setEnabled(true);
+            spnDestination.setEnabled(true);
+            txtStatus.setText(status);
+        }
+        else{
+            btnStatus.setText("Unload Students");
+            swTracking.setEnabled(false);
+            spnDestination.setEnabled(false);
+            txtStatus.setText(status);
+        }
+
+        if(swTracking.isChecked()){
+            txtTracking.setText("Tracking Enabled");
+            btnStatus.setEnabled(true);
+            btnEditProfile.setEnabled(false);
+            btnSchedules.setEnabled(false);
+            btnDestinations.setEnabled(false);
+            txtStatus.setText(status);
+        }
+        else {
+            txtTracking.setText("Tracking Disabled");
+            btnStatus.setEnabled(false);
+            btnEditProfile.setEnabled(true);
+            btnSchedules.setEnabled(true);
+            btnDestinations.setEnabled(true);
+            txtStatus.setText("Tracking Disabled");
+        }
+
+
+    }
 
     private void startLocationUpdates() {
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack, null);
@@ -317,17 +373,14 @@ public class MainActivity extends AppCompatActivity {
             address = "Unable to get street address";
         }
 
-        switch (status){
-            case "In Transit":
-            case "Waiting":
-                refLocation.child("latitude").setValue(latitude);
-                refLocation.child("longitude").setValue(longitude);
-                refLocation.child("accuracy").setValue(accuracy);
-                refLocation.child("altitude").setValue(altitude);
-                refLocation.child("speed").setValue(speed);
-                refLocation.child("address").setValue(address);
-                refLocation.child("destination").setValue(destinationArr[destinationSelectIndex].getId());
-                break;
+        if(swTracking.isChecked()){
+            refLocation.child("latitude").setValue(latitude);
+            refLocation.child("longitude").setValue(longitude);
+            refLocation.child("accuracy").setValue(accuracy);
+            refLocation.child("altitude").setValue(altitude);
+            refLocation.child("speed").setValue(speed);
+            refLocation.child("address").setValue(address);
+            refLocation.child("destination").setValue(destinationArr[destinationSelectIndex].getId());
         }
 
     }

@@ -7,48 +7,93 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reserved Students"
-        android:textSize="16dp" />
-
-    <TextView
-        android:id="@+id/txtReserved"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="--"
-        android:textSize="20dp" />
-
-    <TextView
-        android:id="@+id/txtCapacity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="/--"
-        android:textSize="20dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Status"
-        android:textSize="16dp" />
-
-    <Spinner
-        android:id="@+id/spnStatus"
+    <GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20dp" />
+        android:columnCount="2"
+        android:paddingTop="10dp"
+        android:rowCount="1">
+
+        <Switch
+            android:id="@+id/swTracking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:checked="false"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
+            android:text="Tracking"/>
+
+        <Switch
+            android:id="@+id/swGPS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_columnWeight="1"
+            android:checked="true"
+            android:text="Use GPS"/>
+
+    </GridLayout>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:paddingTop="10dp"
+        android:rowCount="1">
+
+        <TextView
+            android:id="@+id/txtTracking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tracking Disabled"
+            android:layout_columnWeight="1"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/txtSensors"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="Using GPS sensors"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="25dp"
+            android:textSize="16dp" />
+
+    </GridLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Destination"
+        android:layout_marginLeft="20dp"
         android:textSize="16dp" />
 
     <Spinner
         android:id="@+id/spnDestination"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:layout_marginLeft="20dp"
+        android:textSize="16dp" />
+
+    <TextView
+        android:id="@+id/txtStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:layout_marginLeft="20dp"
         android:textSize="20dp" />
 
     <TextView
@@ -64,21 +109,26 @@
         android:text="---"
         android:textSize="20dp" />
 
-    <Switch
-        android:id="@+id/swGPS"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:checked="true"
-        android:text="Use GPS"/>
-
     <TextView
-        android:id="@+id/txtSensors"
+        android:id="@+id/txtReservations"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Using GPS sensors"
-        android:layout_marginLeft="20dp"
-        android:layout_marginBottom="25dp"
+        android:text="Reserved Students (-/-)"
         android:textSize="16dp" />
+
+    <Button
+        android:id="@+id/btnStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:textSize="18dp"
+        android:text="Depart"
+        android:enabled="false"
+        android:textAllCaps="false"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginRight="75dp"/>
 
     <Button
         android:id="@+id/btnEditProfile"
