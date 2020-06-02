@@ -223,11 +223,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 destinationSelectIndex = position;
-                switch (status){
-                    case "In Transit":
-                    case "Waiting":
-                        refLocation.child("destination").setValue(destinationArr[destinationSelectIndex].getId());
-                        break;
+                if(swTracking.isChecked()){
+                    refLocation.child("destination").setValue(destinationArr[destinationSelectIndex].getId());
                 }
             }
 
