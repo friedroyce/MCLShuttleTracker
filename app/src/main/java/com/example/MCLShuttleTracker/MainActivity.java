@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 String count  = String.valueOf(dataSnapshot.getChildrenCount());
                 destinationArr = new DestinationModel[ Integer.valueOf(count)];
 
-                options = new FirebaseListOptions.Builder<DestinationModel>().setQuery(refDestinations, DestinationModel.class).setLayout(R.layout.list_item_destination).build();
+                options = new FirebaseListOptions.Builder<DestinationModel>().setQuery(refDestinations, DestinationModel.class).setLayout(R.layout.spinner_item_destination).build();
 
                 FirebaseListAdapter<DestinationModel> firebaseListAdapter = new FirebaseListAdapter<DestinationModel>(options) {
                     @Override
@@ -135,10 +135,8 @@ public class MainActivity extends AppCompatActivity {
                         DatabaseReference itemRef = getRef(position);
 
                         TextView txtName = v.findViewById(R.id.txtDestinationName);
-                        TextView txtAddress = v.findViewById(R.id.txtDestinationAddress);
 
                         txtName.setText(model.getName());
-                        txtAddress.setText(String.valueOf(model.getAddress()));
                         destinationArr[position] = new DestinationModel();
                         destinationArr[position].setId(itemRef.getKey());
                         destinationArr[position].setName(model.getName());
