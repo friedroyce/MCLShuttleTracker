@@ -22,12 +22,15 @@ public class DestinationsActivity extends AppCompatActivity {
 
     Button btnAddDestination;
     ListView lstDestinations;
+    TextView txtTitle;
 
     ArrayList<DestinationModel> destinations = new ArrayList<>();
 
     DatabaseReference refDestinations;
 
     FirebaseListOptions<DestinationModel> options;
+
+    String mode;
 
 
     @Override
@@ -37,8 +40,16 @@ public class DestinationsActivity extends AppCompatActivity {
 
         btnAddDestination = findViewById(R.id.btnAddDestination);
         lstDestinations = findViewById(R.id.lstDestinations);
+        txtTitle = findViewById(R.id.txtTitle);
 
-        refDestinations = FirebaseDatabase.getInstance().getReference("Destinations");
+        mode = getIntent().getStringExtra("mode");
+
+        if(mode.equals("PickUps") ){
+            btnAddDestination.setText("Add Pick Up Location");
+            txtTitle.setText("Manage Pick Up Locations");
+        }
+
+        refDestinations = FirebaseDatabase.getInstance().getReference(mode);
 
         options = new FirebaseListOptions.Builder<DestinationModel>().setQuery(refDestinations, DestinationModel.class).setLayout(R.layout.list_item_destination).build();
 
@@ -70,6 +81,7 @@ public class DestinationsActivity extends AppCompatActivity {
                 intent.putExtra("destinationAddress", destinations.get(i).getAddress());
                 intent.putExtra("destinationLatitude", destinations.get(i).getLatitude());
                 intent.putExtra("destinationLongitude", destinations.get(i).getLongitude());
+                intent.putExtra("mode", mode);
                 startActivity(intent);
             }
         });
@@ -78,6 +90,7 @@ public class DestinationsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(DestinationsActivity.this, DestinationAddActivity.class);
+                intent.putExtra("mode", mode);
                 startActivity(intent);
             }
         });

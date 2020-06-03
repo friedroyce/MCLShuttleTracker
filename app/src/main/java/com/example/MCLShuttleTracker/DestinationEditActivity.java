@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,8 +33,9 @@ public class DestinationEditActivity extends AppCompatActivity implements OnMapR
 
     Button btnDelete, btnCancel, btnSave;
     EditText txtName;
+    TextView txtTitle;
 
-    String id, name, address;
+    String id, name, address, mode;
     double latitude, longitude;
 
     @Override
@@ -45,6 +47,14 @@ public class DestinationEditActivity extends AppCompatActivity implements OnMapR
         btnCancel = findViewById(R.id.btnCancel);
         btnDelete = findViewById(R.id.btnDelete);
         txtName = findViewById(R.id.txtDestinationName);
+        txtTitle = findViewById(R.id.txtTitle);
+
+        mode = getIntent().getStringExtra("mode");
+
+        if(mode.equals("PickUps") ){
+            txtName.setHint("Location Name");
+            txtTitle.setText("Edit Pick Up Location");
+        }
 
         id = getIntent().getStringExtra("destinationId");
         name = getIntent().getStringExtra("destinationName");
@@ -71,14 +81,14 @@ public class DestinationEditActivity extends AppCompatActivity implements OnMapR
                     ShowToast("Please enter a name for this location");
                 }
                 else{
-                    DatabaseReference destination = FirebaseDatabase.getInstance().getReference("Destinations/" + id);
+                    DatabaseReference destination = FirebaseDatabase.getInstance().getReference(mode + "/" + id);
 
                     destination.child("address").setValue(address);
                     destination.child("latitude").setValue(latitude);
                     destination.child("longitude").setValue(longitude);
                     destination.child("name").setValue(name);
 
-                    ShowToast("Destination Edited Successfully");
+                    ShowToast("Location Edited Successfully");
                     finish();
                 }
             }
@@ -89,16 +99,16 @@ public class DestinationEditActivity extends AppCompatActivity implements OnMapR
             public void onClick(View view) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(DestinationEditActivity.this);
-                builder.setMessage("Are you sure you want to delete this destination?")
+                builder.setMessage("Are you sure you want to delete this location?")
                         .setNegativeButton("No", null)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                DatabaseReference destination = FirebaseDatabase.getInstance().getReference("Destinations");
+                                DatabaseReference destination = FirebaseDatabase.getInstance().getReference(mode);
 
                                 destination.child(id).removeValue();
 
-                                ShowToast("Destination Deleted Successfully");
+                                ShowToast("Location Deleted Successfully");
                                 finish();
                             }
                         });

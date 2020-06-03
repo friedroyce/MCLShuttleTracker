@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,9 +32,10 @@ public class DestinationAddActivity extends AppCompatActivity implements OnMapRe
 
     Button btnAdd, btnCancel;
     EditText txtName;
+    TextView txtTitle;
 
 
-    String name, address;
+    String name, address, mode;
     double latitude, longitude;
 
     @Override
@@ -44,6 +46,14 @@ public class DestinationAddActivity extends AppCompatActivity implements OnMapRe
         btnAdd = findViewById(R.id.btnAdd);
         btnCancel = findViewById(R.id.btnCancel);
         txtName = findViewById(R.id.txtDestinationName);
+        txtTitle = findViewById(R.id.txtTitle);
+
+        mode = getIntent().getStringExtra("mode");
+
+        if(mode.equals("PickUps") ){
+            txtName.setHint("Location Name");
+            txtTitle.setText("Add Pick Up Location");
+        }
 
         SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.frgMap);
         mapFragment.getMapAsync(this);
@@ -63,7 +73,7 @@ public class DestinationAddActivity extends AppCompatActivity implements OnMapRe
                     ShowToast("Please enter a name for this location");
                 }
                 else{
-                    final DatabaseReference destinations = FirebaseDatabase.getInstance().getReference("Destinations");
+                    final DatabaseReference destinations = FirebaseDatabase.getInstance().getReference(mode);
                     destinations.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -73,7 +83,7 @@ public class DestinationAddActivity extends AppCompatActivity implements OnMapRe
                             destination.child("longitude").setValue(longitude);
                             destination.child("name").setValue(name);
 
-                            ShowToast("Destination Added Successfully");
+                            ShowToast("Added Successfully");
                             finish();
                         }
 

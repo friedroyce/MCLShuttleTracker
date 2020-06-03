@@ -30,6 +30,16 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SettingsActivity.this, DestinationsActivity.class);
+                intent.putExtra("mode", "Destinations");
+                startActivity(intent);
+            }
+        });
+
+        btnPickUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SettingsActivity.this, DestinationsActivity.class);
+                intent.putExtra("mode", "PickUps");
                 startActivity(intent);
             }
         });
