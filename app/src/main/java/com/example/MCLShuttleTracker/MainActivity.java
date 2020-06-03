@@ -14,8 +14,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
-import com.google.android.datatransport.runtime.Destination;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -36,7 +35,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     //references to ui elements
     Switch swGPS, swTracking;
     TextView txtSensors, txtTracking, txtReservations, txtETA, txtStatus;
+    ListView lstReservations;
     Spinner spnDestination;
     Button btnEditProfile, btnDestinations, btnSchedules, btnStatus;
 
@@ -55,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference refLocation;
     DatabaseReference refDestinations;
     DatabaseReference refReservations;
-    FirebaseListOptions<DestinationModel> options;
+    FirebaseListOptions<DestinationModel> optionsDestination;
+    FirebaseListOptions<String> optionsReservation;
     DestinationModel[] destinationArr;
 
     String driverId;
@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         btnDestinations = findViewById(R.id.btnDestinations);
         btnSchedules = findViewById(R.id.btnSchedules);
         btnStatus = findViewById(R.id.btnStatus);
+        lstReservations = findViewById(R.id.lstReservations);
 
         //get driver reference from firebase
         driverId = getIntent().getStringExtra("driverId");
@@ -93,6 +94,26 @@ public class MainActivity extends AppCompatActivity {
         refDestinations = refRoot.child("Destinations");
 
         status = "Waiting";
+
+        optionsReservation = new FirebaseListOptions.Builder<String>().setQuery(refReservations, String.class).setLayout(R.layout.list_item_reservation).build();
+
+        FirebaseListAdapter<String> firebaseListAdapter = new FirebaseListAdapter<String>(optionsReservation) {
+            @Override
+            protected void populateView(@NonNull View v, @NonNull String name, int position) {
+
+                DatabaseReference itemRef = getRef(position);
+
+                TextView txtStudentName = v.findViewById(R.id.txtStudentName);
+                TextView txtStudentId = v.findViewById(R.id.txtStudentId);
+
+                txtStudentName.setText(name);
+                txtStudentId.setText(itemRef.getKey());
+
+            }
+        };
+
+        firebaseListAdapter.startListening();
+        lstReservations.setAdapter(firebaseListAdapter);
 
         refDriver.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -119,15 +140,16 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
         refDestinations.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String count  = String.valueOf(dataSnapshot.getChildrenCount());
                 destinationArr = new DestinationModel[ Integer.valueOf(count)];
 
-                options = new FirebaseListOptions.Builder<DestinationModel>().setQuery(refDestinations, DestinationModel.class).setLayout(R.layout.spinner_item_destination).build();
+                optionsDestination = new FirebaseListOptions.Builder<DestinationModel>().setQuery(refDestinations, DestinationModel.class).setLayout(R.layout.spinner_item_destination).build();
 
-                FirebaseListAdapter<DestinationModel> firebaseListAdapter = new FirebaseListAdapter<DestinationModel>(options) {
+                FirebaseListAdapter<DestinationModel> firebaseListAdapter = new FirebaseListAdapter<DestinationModel>(optionsDestination) {
                     @Override
                     protected void populateView(@NonNull View v, @NonNull DestinationModel model, int position) {
 
