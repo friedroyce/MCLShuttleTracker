@@ -102,6 +102,20 @@
             android:layout_marginLeft="20dp"
             android:textSize="20dp" />
 
+        <Button
+            android:id="@+id/btnStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:textSize="18dp"
+            android:text="Depart"
+            android:enabled="false"
+            android:textAllCaps="false"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
+
         <TextView
             android:id="@+id/txtReservations"
             android:layout_width="wrap_content"
@@ -139,57 +153,18 @@
         android:paddingBottom="15dp" >
 
         <Button
-            android:id="@+id/btnStatus"
+            android:id="@+id/btnManage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:textSize="18dp"
-            android:text="Depart"
+            android:text="Management"
             android:enabled="false"
             android:textAllCaps="false"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="75dp"
-            android:layout_marginRight="75dp"/>
-
-        <Button
-            android:id="@+id/btnEditProfile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_columnWeight="1"
-            android:textSize="18dp"
-            android:text="Edit Profile"
-            android:textAllCaps="false"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="75dp"
-            android:layout_marginRight="75dp"/>
-
-        <Button
-            android:id="@+id/btnDestinations"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_columnWeight="1"
-            android:textSize="18dp"
-            android:text="Manage Destinations"
-            android:textAllCaps="false"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="75dp"
-            android:layout_marginRight="75dp"/>
-
-        <Button
-            android:id="@+id/btnSchedules"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_columnWeight="1"
-            android:textSize="18dp"
-            android:text="Departure Schedules"
-            android:textAllCaps="false"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="75dp"
-            android:layout_marginRight="75dp"/>
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
 
     </LinearLayout>
 

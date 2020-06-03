@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     TextView txtSensors, txtTracking, txtReservations, txtETA, txtStatus;
     ListView lstReservations;
     Spinner spnDestination;
-    Button btnEditProfile, btnDestinations, btnSchedules, btnStatus;
+    Button btnManage, btnStatus;
 
     DatabaseReference refRoot;
     DatabaseReference refDriver;
@@ -79,14 +79,13 @@ public class MainActivity extends AppCompatActivity {
         txtTracking = findViewById(R.id.txtTracking);
         txtReservations = findViewById(R.id.txtReservations);
         spnDestination = findViewById(R.id.spnDestination);
-        btnEditProfile = findViewById(R.id.btnEditProfile);
-        btnDestinations = findViewById(R.id.btnDestinations);
-        btnSchedules = findViewById(R.id.btnSchedules);
         btnStatus = findViewById(R.id.btnStatus);
+        btnManage = findViewById(R.id.btnManage);
         lstReservations = findViewById(R.id.lstReservations);
 
-        //get driver reference from firebase
         driverId = getIntent().getStringExtra("driverId");
+
+        //get driver reference from firebase
         refRoot = FirebaseDatabase.getInstance().getReference();
         refDriver = refRoot.child("Drivers/" + driverId);
         refLocation = refRoot.child("Tracking/" + driverId);
@@ -242,6 +241,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnManage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                intent.putExtra("driverId", driverId);
+                startActivityForResult(intent,1);
+            }
+        });
+
         spnDestination.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -255,22 +263,7 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parentView) { }
         });
 
-        btnDestinations.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, DestinationsActivity.class);
-                startActivity(intent);
-            }
-        });
 
-        btnEditProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AccountEditActivity.class);
-                intent.putExtra("driverId", driverId);
-                startActivity(intent);
-            }
-        });
 
         updateGPS();
     }//end of on create
@@ -295,17 +288,13 @@ public class MainActivity extends AppCompatActivity {
         if(swTracking.isChecked()){
             txtTracking.setText("Tracking Enabled");
             btnStatus.setEnabled(true);
-            btnEditProfile.setEnabled(false);
-            btnSchedules.setEnabled(false);
-            btnDestinations.setEnabled(false);
+            btnManage.setEnabled(false);
             txtStatus.setText(status);
         }
         else {
             txtTracking.setText("Tracking Disabled");
             btnStatus.setEnabled(false);
-            btnEditProfile.setEnabled(true);
-            btnSchedules.setEnabled(true);
-            btnDestinations.setEnabled(true);
+            btnManage.setEnabled(true);
             txtStatus.setText("Tracking Disabled");
         }
 
