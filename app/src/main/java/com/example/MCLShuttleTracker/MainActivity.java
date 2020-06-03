@@ -220,6 +220,7 @@ public class MainActivity extends AppCompatActivity {
                     stopLocationUpdates();
                     DatabaseReference tracking = FirebaseDatabase.getInstance().getReference("Tracking");
                     tracking.child(driverId).removeValue();
+                    refReservations.removeValue();
                 }
                 updateUI();
             }
