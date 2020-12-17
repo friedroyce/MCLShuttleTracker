@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference refDestinations;
     DatabaseReference refReservations;
     FirebaseListOptions<DestinationModel> optionsDestination;
-    FirebaseListOptions<String> optionsReservation;
+    FirebaseListOptions<ReservationModel> optionsReservation;
     DestinationModel[] destinationArr;
 
     String driverId;
@@ -94,25 +94,25 @@ public class MainActivity extends AppCompatActivity {
 
         status = "Waiting";
 
-        optionsReservation = new FirebaseListOptions.Builder<String>().setQuery(refReservations, String.class).setLayout(R.layout.list_item_reservation).build();
+        optionsReservation = new FirebaseListOptions.Builder<ReservationModel>().setQuery(refReservations, ReservationModel.class).setLayout(R.layout.list_item_reservation).build();
 
-        FirebaseListAdapter<String> firebaseListAdapter = new FirebaseListAdapter<String>(optionsReservation) {
+        FirebaseListAdapter<ReservationModel> firebaseListAdapter = new FirebaseListAdapter<ReservationModel>(optionsReservation) {
             @Override
-            protected void populateView(@NonNull View v, @NonNull String name, int position) {
+            protected void populateView(@NonNull View v, @NonNull ReservationModel model, int position) {
 
                 DatabaseReference itemRef = getRef(position);
 
                 TextView txtStudentName = v.findViewById(R.id.txtStudentName);
                 TextView txtStudentId = v.findViewById(R.id.txtStudentId);
 
-                txtStudentName.setText(name);
+                txtStudentName.setText(model.getName());
                 txtStudentId.setText(itemRef.getKey());
 
             }
         };
 
         firebaseListAdapter.startListening();
-        //lstReservations.setAdapter(firebaseListAdapter);
+        lstReservations.setAdapter(firebaseListAdapter);
 
         refDriver.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
