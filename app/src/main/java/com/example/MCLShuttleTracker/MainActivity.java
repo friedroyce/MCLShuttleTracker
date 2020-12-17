@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         firebaseListAdapter.startListening();
-        lstReservations.setAdapter(firebaseListAdapter);
+        //lstReservations.setAdapter(firebaseListAdapter);
 
         refDriver.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -143,8 +143,8 @@ public class MainActivity extends AppCompatActivity {
         refDestinations.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String count  = String.valueOf(dataSnapshot.getChildrenCount());
-                destinationArr = new DestinationModel[ Integer.valueOf(count)];
+                String count = String.valueOf(dataSnapshot.getChildrenCount());
+                destinationArr = new DestinationModel[Integer.valueOf(count)];
 
                 optionsDestination = new FirebaseListOptions.Builder<DestinationModel>().setQuery(refDestinations, DestinationModel.class).setLayout(R.layout.spinner_item_destination).build();
 
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
         //this is triggered whenever the location update interval is met
-        locationCallBack = new LocationCallback(){
+        locationCallBack = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
@@ -195,12 +195,11 @@ public class MainActivity extends AppCompatActivity {
         swGPS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(swGPS.isChecked()){
+                if (swGPS.isChecked()) {
                     //most accurate
                     locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
                     txtSensors.setText("Using GPS sensors");
-                }
-                else{
+                } else {
                     locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
                     txtSensors.setText("Using cellular towers and WiFi sensors");
                 }
@@ -210,12 +209,11 @@ public class MainActivity extends AppCompatActivity {
         swTracking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(swTracking.isChecked()){
+                if (swTracking.isChecked()) {
                     refLocation.child("status").setValue(status);
                     refLocation.child("destination").setValue(destinationArr[destinationSelectIndex].getId());
                     startLocationUpdates();
-                }
-                else {
+                } else {
                     stopLocationUpdates();
                     DatabaseReference tracking = FirebaseDatabase.getInstance().getReference("Tracking");
                     tracking.child(driverId).removeValue();
@@ -228,11 +226,10 @@ public class MainActivity extends AppCompatActivity {
         btnStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (status.equals("Waiting")){
+                if (status.equals("Waiting")) {
                     status = "In Transit";
                     refLocation.child("status").setValue(status);
-                }
-                else{
+                } else {
                     status = "Waiting";
                     refLocation.child("status").setValue(status);
                     refReservations.removeValue();
@@ -246,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 intent.putExtra("driverId", driverId);
-                startActivityForResult(intent,1);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -254,44 +251,42 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 destinationSelectIndex = position;
-                if(swTracking.isChecked()){
+                if (swTracking.isChecked()) {
                     refLocation.child("destination").setValue(destinationArr[destinationSelectIndex].getId());
                 }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parentView) { }
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
         });
-
 
 
         updateGPS();
     }//end of on create
 
-    private void updateUI(){
+    private void updateUI() {
 
         txtReservations.setText("Reserved Students (" + reservation + "/" + capacity + ")");
 
-        if (status.equals("Waiting")){
+        if (status.equals("Waiting")) {
             btnStatus.setText("Depart");
             swTracking.setEnabled(true);
             spnDestination.setEnabled(true);
             txtStatus.setText(status);
-        }
-        else{
+        } else {
             btnStatus.setText("Unload Students");
             swTracking.setEnabled(false);
             spnDestination.setEnabled(false);
             txtStatus.setText(status);
         }
 
-        if(swTracking.isChecked()){
+        if (swTracking.isChecked()) {
             txtTracking.setText("Tracking Enabled");
             btnStatus.setEnabled(true);
             btnManage.setEnabled(false);
             txtStatus.setText(status);
-        }
-        else {
+        } else {
             txtTracking.setText("Tracking Disabled");
             btnStatus.setEnabled(false);
             btnManage.setEnabled(true);
@@ -302,6 +297,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack, null);
         updateGPS();
     }
