@@ -53,5 +53,14 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        btnSchedules.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SettingsActivity.this, SchedulesActivity.class);
+                intent.putExtra("driverId", driverId);
+                startActivity(intent);
+            }
+        });
+
     }
 }
