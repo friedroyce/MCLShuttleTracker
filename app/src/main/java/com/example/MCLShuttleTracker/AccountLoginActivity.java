@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -18,8 +20,9 @@ import com.google.firebase.database.ValueEventListener;
 public class AccountLoginActivity extends AppCompatActivity {
 
     //references to ui elements
-    Button btnLogin, btnRegister;
+    Button btnLogin;
     EditText txtDriverId, txtPassword;
+    TextView lblRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +30,18 @@ public class AccountLoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account_login);
 
         btnLogin = findViewById(R.id.btnLogin);
-        btnRegister = findViewById(R.id.btnRegister);
         txtDriverId = findViewById(R.id.txtDriverId);
         txtPassword = findViewById(R.id.txtPassword);
+        lblRegister = findViewById(R.id.lblRegister);
+
+        lblRegister.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Intent intent = new Intent(AccountLoginActivity.this, AccountRegisterActivity.class);
+                startActivity(intent);
+                return false;
+            }
+        });
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -66,13 +78,7 @@ public class AccountLoginActivity extends AppCompatActivity {
             }
         });
 
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(AccountLoginActivity.this, AccountRegisterActivity.class);
-                startActivity(intent);
-            }
-        });
-    }
+     }
 
     void ShowToast(String message){ Toast.makeText(this, message, Toast.LENGTH_SHORT).show(); }
 }

@@ -1,155 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="25dp"
+    android:background="@drawable/registerbg"
     android:clickable="true"
     android:focusable="true"
     tools:context=".AccountRegisterActivity">
 
+
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Register"
-        android:layout_marginLeft="20dp"
-        android:layout_marginBottom="25dp"
-        android:textSize="28dp" />
+        android:fontFamily="@font/bold"
+        android:textSize="28dp"
+        android:textColor="@color/mclblue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.177" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="300dp"
+        android:layout_height="51dp"
+        android:text="Sign up to be part of MCL's growing number of shuttle drivers on the radar."
+        android:textColor="@color/mclblue"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.254" />
+
+
+    <EditText
+        android:id="@+id/txtDriverId"
+        android:layout_width="171dp"
+        android:layout_height="54dp"
+        android:background="@color/inputboxgrey"
+        android:fontFamily="@font/regular"
+        android:hint="Driver ID"
+        android:nextFocusForward="@+id/txtFirstName"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.195"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.4" />
+
+    <EditText
+        android:id="@+id/txtFirstName"
+        android:layout_width="171dp"
+        android:layout_height="54dp"
+        android:background="@color/inputboxgrey"
+        android:fontFamily="@font/regular"
+        android:hint="First Name"
+        android:nextFocusForward="@+id/txtLastName"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.19"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtDriverId"
+        app:layout_constraintVertical_bias="0.01999998" />
+
+    <EditText
+        android:id="@+id/txtLastName"
+        android:layout_width="171dp"
+        android:layout_height="54dp"
+        android:background="@color/inputboxgrey"
+        android:fontFamily="@font/regular"
+        android:hint="Last Name"
+        android:nextFocusForward="@+id/txtPassword"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.19"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtFirstName"
+        app:layout_constraintVertical_bias="0.021" />
+
+    <EditText
+        android:id="@+id/txtPassword"
+        android:layout_width="318dp"
+        android:layout_height="54dp"
+        android:background="@color/inputboxgrey"
+        android:fontFamily="@font/regular"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:nextFocusForward="@+id/txtConfirmPass"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.44"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.65999997" />
+
+    <EditText
+        android:id="@+id/txtConfirmPass"
+        android:layout_width="318dp"
+        android:layout_height="54dp"
+        android:background="@color/inputboxgrey"
+        android:fontFamily="@font/regular"
+        android:hint="Confirm Password"
+        android:inputType="textPassword"
+        android:nextFocusForward="@+id/btnRegister"
+        android:paddingLeft="10dp"
+        android:singleLine="true"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.44"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtPassword"
+        app:layout_constraintVertical_bias="0.050000012" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:text="Vehicle Seat Capacity"
+        android:fontFamily="@font/regular"
+        android:textColor="@color/mclblue"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.255"
+        app:layout_constraintStart_toEndOf="@+id/txtDriverId"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.381" />
 
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_columnWeight="1"
-            android:layout_columnSpan="1"
-            android:layout_rowWeight="1"
-            android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/txtDriverId"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="15dp"
-                android:hint="Driver Id"
-                android:nextFocusForward="@+id/txtFirstName"
-                android:singleLine="true"
-                android:textSize="20dp" />
-
-            <EditText
-                android:id="@+id/txtFirstName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="15dp"
-                android:hint="First Name"
-                android:nextFocusForward="@+id/txtLastName"
-                android:singleLine="true"
-                android:textSize="20dp" />
-
-            <EditText
-                android:id="@+id/txtLastName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="15dp"
-                android:hint="Last Name"
-                android:nextFocusForward="@+id/txtPassword"
-                android:singleLine="true"
-                android:textSize="20dp" />
-
-            <EditText
-                android:id="@+id/txtPassword"
-                android:hint="Password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
-                android:layout_marginLeft="30dp"
-                android:inputType="textPassword"
-                android:textSize="20dp"
-                android:singleLine="true"
-                android:nextFocusForward="@+id/txtConfirmPass"
-                android:layout_marginTop="10dp" />
-
-            <EditText
-                android:id="@+id/txtConfirmPass"
-                android:hint="Confirm Password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
-                android:layout_marginLeft="30dp"
-                android:inputType="textPassword"
-                android:textSize="20dp"
-                android:singleLine="true"
-                android:nextFocusForward="@+id/btnRegister"
-                android:layout_marginTop="10dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_columnWeight="1"
-            android:layout_columnSpan="1"
-            android:layout_rowWeight="1"
-            android:orientation="vertical">
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Seat Capacity"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="30dp"
-                android:textSize="20dp" />
-
-            <NumberPicker
-                android:id="@+id/numCapacity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="30dp"
-                />
-
-        </LinearLayout>
-
-    </LinearLayout>
+    <NumberPicker
+        android:id="@+id/numCapacity"
+        android:layout_width="93dp"
+        android:layout_height="148dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.78"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/btnRegister"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_columnWeight="1"
-        android:textSize="18dp"
-        android:text="Register"
+        android:layout_width="306dp"
+        android:layout_height="54dp"
+        android:background="@drawable/btnblue"
+        android:fontFamily="@font/bold"
+        android:text="Create Account"
         android:textAllCaps="false"
-        android:layout_gravity="center"
-        android:layout_marginLeft="75dp"
-        android:layout_marginRight="75dp"
-        android:layout_marginTop="20dp"/>
-
-    <Button
-        android:id="@+id/btnCancel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_columnWeight="1"
+        android:textColor="@color/white"
         android:textSize="18dp"
-        android:text="Cancel"
-        android:textAllCaps="false"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="75dp"
-        android:layout_marginRight="75dp"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.89" />
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="32dp"
+        android:layout_height="28dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.078"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.087"
+        app:srcCompat="@drawable/back_btn" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
