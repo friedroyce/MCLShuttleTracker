@@ -9,7 +9,7 @@ import android.widget.Button;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    Button btnEditProfile, btnDestinations, btnPickUp, btnSchedules;
+    Button btnEditProfile, btnDestinations, btnTransits, btnSchedules;
 
     String driverId;
 
@@ -22,7 +22,7 @@ public class SettingsActivity extends AppCompatActivity {
         btnEditProfile = findViewById(R.id.btnEditProfile);
         btnDestinations = findViewById(R.id.btnDestinations);
         btnSchedules = findViewById(R.id.btnSchedules);
-        btnPickUp = findViewById(R.id.btnPickUp);
+        btnTransits = findViewById(R.id.btnTransits);
 
         driverId = getIntent().getStringExtra("driverId");
 
@@ -30,16 +30,15 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SettingsActivity.this, DestinationsActivity.class);
-                intent.putExtra("mode", "Destinations");
                 startActivity(intent);
             }
         });
 
-        btnPickUp.setOnClickListener(new View.OnClickListener() {
+        btnTransits.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SettingsActivity.this, DestinationsActivity.class);
-                intent.putExtra("mode", "PickUps");
+                intent.putExtra("driverId", driverId);
                 startActivity(intent);
             }
         });
@@ -57,7 +56,6 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SettingsActivity.this, SchedulesActivity.class);
-                intent.putExtra("driverId", driverId);
                 startActivity(intent);
             }
         });
