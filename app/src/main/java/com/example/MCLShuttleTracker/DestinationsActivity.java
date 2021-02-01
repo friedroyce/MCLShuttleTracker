@@ -30,9 +30,6 @@ public class DestinationsActivity extends AppCompatActivity {
 
     FirebaseListOptions<DestinationModel> options;
 
-    String mode;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,14 +39,14 @@ public class DestinationsActivity extends AppCompatActivity {
         lstDestinations = findViewById(R.id.lstDestinations);
         txtTitle = findViewById(R.id.txtTitle);
 
-        mode = getIntent().getStringExtra("mode");
+//        mode = getIntent().getStringExtra("mode");
+//
+//        if(mode.equals("PickUps") ){
+//            btnAddDestination.setText("Add Pick Up Location");
+//            txtTitle.setText("Manage Pick Up Locations");
+//        }
 
-        if(mode.equals("PickUps") ){
-            btnAddDestination.setText("Add Pick Up Location");
-            txtTitle.setText("Manage Pick Up Locations");
-        }
-
-        refDestinations = FirebaseDatabase.getInstance().getReference(mode);
+        refDestinations = FirebaseDatabase.getInstance().getReference("Stations");
 
         options = new FirebaseListOptions.Builder<DestinationModel>().setQuery(refDestinations, DestinationModel.class).setLayout(R.layout.list_item_destination).build();
 
@@ -81,7 +78,7 @@ public class DestinationsActivity extends AppCompatActivity {
                 intent.putExtra("destinationAddress", destinations.get(i).getAddress());
                 intent.putExtra("destinationLatitude", destinations.get(i).getLatitude());
                 intent.putExtra("destinationLongitude", destinations.get(i).getLongitude());
-                intent.putExtra("mode", mode);
+//                intent.putExtra("mode", mode);
                 startActivity(intent);
             }
         });
@@ -90,7 +87,7 @@ public class DestinationsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(DestinationsActivity.this, DestinationAddActivity.class);
-                intent.putExtra("mode", mode);
+//                intent.putExtra("mode", mode);
                 startActivity(intent);
             }
         });

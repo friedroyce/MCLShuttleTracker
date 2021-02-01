@@ -17,7 +17,7 @@
             android:id="@+id/txtTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Manage Destinations"
+            android:text="Manage Stations"
             android:layout_marginBottom="25dp"
             android:layout_marginLeft="20dp"
             android:textSize="24dp" />
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="18dp"
-            android:text="Add New Destination"
+            android:text="Add Station"
             android:paddingRight="25dp"
             android:paddingLeft="25dp"
             android:textAllCaps="false" />

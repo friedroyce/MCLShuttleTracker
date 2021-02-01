@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginBottom="15dp"
-            android:text="Add Destination"
+            android:text="Add Station"
             android:textSize="24dp" />
 
         <fragment
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:hint="Destination Name"
+            android:hint="Station Name"
             android:nextFocusForward="@+id/btnAdd"
             android:singleLine="true"
             android:textSize="20dp" />

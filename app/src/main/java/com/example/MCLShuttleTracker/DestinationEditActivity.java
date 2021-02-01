@@ -35,7 +35,7 @@ public class DestinationEditActivity extends AppCompatActivity implements OnMapR
     EditText txtName;
     TextView txtTitle;
 
-    String id, name, address, mode;
+    String id, name, address;
     double latitude, longitude;
 
     @Override
@@ -49,12 +49,12 @@ public class DestinationEditActivity extends AppCompatActivity implements OnMapR
         txtName = findViewById(R.id.txtDestinationName);
         txtTitle = findViewById(R.id.txtTitle);
 
-        mode = getIntent().getStringExtra("mode");
-
-        if(mode.equals("PickUps") ){
-            txtName.setHint("Location Name");
-            txtTitle.setText("Edit Pick Up Location");
-        }
+//        mode = getIntent().getStringExtra("mode");
+//
+//        if(mode.equals("PickUps") ){
+//            txtName.setHint("Location Name");
+//            txtTitle.setText("Edit Pick Up Location");
+//        }
 
         id = getIntent().getStringExtra("destinationId");
         name = getIntent().getStringExtra("destinationName");
@@ -81,7 +81,7 @@ public class DestinationEditActivity extends AppCompatActivity implements OnMapR
                     ShowToast("Please enter a name for this location");
                 }
                 else{
-                    DatabaseReference destination = FirebaseDatabase.getInstance().getReference(mode + "/" + id);
+                    DatabaseReference destination = FirebaseDatabase.getInstance().getReference("Stations/" + id);
 
                     destination.child("address").setValue(address);
                     destination.child("latitude").setValue(latitude);
@@ -104,7 +104,7 @@ public class DestinationEditActivity extends AppCompatActivity implements OnMapR
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                DatabaseReference destination = FirebaseDatabase.getInstance().getReference(mode);
+                                DatabaseReference destination = FirebaseDatabase.getInstance().getReference("Stations");
 
                                 destination.child(id).removeValue();
 

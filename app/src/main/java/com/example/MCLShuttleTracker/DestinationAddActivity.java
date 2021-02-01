@@ -35,7 +35,7 @@ public class DestinationAddActivity extends AppCompatActivity implements OnMapRe
     TextView txtTitle;
 
 
-    String name, address, mode;
+    String name, address;
     double latitude, longitude;
 
     @Override
@@ -48,12 +48,12 @@ public class DestinationAddActivity extends AppCompatActivity implements OnMapRe
         txtName = findViewById(R.id.txtDestinationName);
         txtTitle = findViewById(R.id.txtTitle);
 
-        mode = getIntent().getStringExtra("mode");
+        //mode = getIntent().getStringExtra("mode");
 
-        if(mode.equals("PickUps") ){
-            txtName.setHint("Location Name");
-            txtTitle.setText("Add Pick Up Location");
-        }
+//        if(mode.equals("PickUps") ){
+//            txtName.setHint("Location Name");
+//            txtTitle.setText("Add Pick Up Location");
+//        }
 
         SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.frgMap);
         mapFragment.getMapAsync(this);
@@ -73,7 +73,7 @@ public class DestinationAddActivity extends AppCompatActivity implements OnMapRe
                     ShowToast("Please enter a name for this location");
                 }
                 else{
-                    final DatabaseReference destinations = FirebaseDatabase.getInstance().getReference(mode);
+                    final DatabaseReference destinations = FirebaseDatabase.getInstance().getReference("Stations");
                     destinations.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
