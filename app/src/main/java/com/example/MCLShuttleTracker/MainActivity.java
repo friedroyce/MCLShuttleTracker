@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         refDriver = refRoot.child("Drivers/" + driverId);
         refLocation = refRoot.child("Tracking/" + driverId);
         refReservations = refRoot.child("Reservations/" + driverId);
-        refDestinations = refRoot.child("Destinations");
+        refDestinations = refRoot.child("Stations");
 
         status = "Waiting";
 
