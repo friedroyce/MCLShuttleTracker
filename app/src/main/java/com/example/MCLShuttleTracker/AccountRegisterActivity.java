@@ -2,10 +2,12 @@ package com.example.MCLShuttleTracker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
@@ -18,9 +20,10 @@ import com.google.firebase.database.ValueEventListener;
 public class AccountRegisterActivity extends AppCompatActivity {
 
     //references to ui elements
-    Button btnRegister, btnCancel;
+    Button btnRegister;
     EditText txtDriverId, txtFirstName, txtLastName, txtPassword, txtConfirmPass;
     NumberPicker numCapacity;
+    ImageView btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +31,14 @@ public class AccountRegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account_register);
 
         btnRegister = findViewById(R.id.btnRegister);
-        btnCancel = findViewById(R.id.btnCancel);
         txtDriverId = findViewById(R.id.txtDriverId);
         txtFirstName = findViewById(R.id.txtFirstName);
         txtLastName = findViewById(R.id.txtLastName);
         txtPassword = findViewById(R.id.txtPassword);
         txtConfirmPass = findViewById(R.id.txtConfirmPass);
         numCapacity = findViewById(R.id.numCapacity);
+        btnBack = findViewById(R.id.btnBack);
+
 
         numCapacity.setMaxValue(24);
         numCapacity.setMinValue(4);
@@ -71,7 +75,7 @@ public class AccountRegisterActivity extends AppCompatActivity {
                                 driver.child("capacity").setValue(capacity);
 
                                 ShowToast("Registration successful!");
-                                finish();
+                                startActivity(new Intent(AccountRegisterActivity.this, AccountLoginActivity.class));
                             }
                         }
 
@@ -82,16 +86,16 @@ public class AccountRegisterActivity extends AppCompatActivity {
                     });
                 }
 
-
-
             }
         });
 
-        btnCancel.setOnClickListener(new View.OnClickListener() {
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
-                finish();
+                startActivity(new Intent(AccountRegisterActivity.this, AccountLoginActivity.class));
             }
         });
+
 
     }
 
