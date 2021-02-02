@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_management"
+    app:startDestination="@id/fragmentTransits">
+
+    <fragment
+        android:id="@+id/fragmentTransits"
+        android:name="com.example.MCLShuttleTracker.FragmentTransits"
+        android:label="fragment_transits"
+        tools:layout="@layout/fragment_transits" />
+    <fragment
+        android:id="@+id/fragmentStations"
+        android:name="com.example.MCLShuttleTracker.FragmentStations"
+        android:label="fragment_stations"
+        tools:layout="@layout/fragment_stations" />
+    <fragment
+        android:id="@+id/fragmentSchedules"
+        android:name="com.example.MCLShuttleTracker.FragmentSchedules"
+        android:label="fragment_schedules"
+        tools:layout="@layout/fragment_schedules" />
+    <fragment
+        android:id="@+id/fragmentProfile"
+        android:name="com.example.MCLShuttleTracker.FragmentProfile"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+</navigation>

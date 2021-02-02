@@ -1,71 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".SettingsActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Management"
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="25dp"
-        android:layout_marginLeft="20dp"
-        android:textSize="24dp" />
 
-    <Button
-        android:id="@+id/btnTransits"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navManagement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_columnWeight="1"
-        android:textSize="18dp"
-        android:text="Transits"
-        android:textAllCaps="false"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="75dp"
-        android:layout_marginRight="75dp"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/white"
+        app:menu="@menu/menu_management" />
 
-    <Button
-        android:id="@+id/btnDestinations"
+    <fragment
+        android:id="@+id/frgManagement"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_columnWeight="1"
-        android:textSize="18dp"
-        android:text="Stations"
-        android:textAllCaps="false"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="75dp"
-        android:layout_marginRight="75dp"/>
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/nav_management" />
 
-    <Button
-        android:id="@+id/btnSchedules"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_columnWeight="1"
-        android:textSize="18dp"
-        android:text="Schedules"
-        android:textAllCaps="false"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="75dp"
-        android:layout_marginRight="75dp"/>
-
-    <Button
-        android:id="@+id/btnEditProfile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_columnWeight="1"
-        android:textSize="18dp"
-        android:text="Edit Profile"
-        android:textAllCaps="false"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="75dp"
-        android:layout_marginRight="75dp"/>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
