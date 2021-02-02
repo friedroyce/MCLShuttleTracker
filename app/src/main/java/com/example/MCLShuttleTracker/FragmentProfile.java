@@ -37,7 +37,8 @@ public class FragmentProfile extends Fragment {
     EditText txtDriverId, txtFirstName, txtLastName, txtPassword, txtConfirmPass;
     NumberPicker numCapacity;
 
-    String driverId;
+    String driverId, driverFName, driverLName;
+    int driverCapacity;
 
     DatabaseReference driver;
 
@@ -98,9 +99,13 @@ public class FragmentProfile extends Fragment {
         driver.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                txtFirstName.setText(dataSnapshot.child("firstName").getValue().toString());
-                txtLastName.setText(dataSnapshot.child("lastName").getValue().toString());
-                numCapacity.setValue(Integer.valueOf(dataSnapshot.child("capacity").getValue().toString()));
+                driverFName = dataSnapshot.child("firstName").getValue().toString();
+                driverLName = dataSnapshot.child("lastName").getValue().toString();
+                driverCapacity = Integer.valueOf(dataSnapshot.child("capacity").getValue().toString());
+
+                txtFirstName.setText(driverFName);
+                txtLastName.setText(driverLName);
+                numCapacity.setValue(driverCapacity);
             }
 
             @Override
@@ -130,8 +135,12 @@ public class FragmentProfile extends Fragment {
                     driver.child("password").setValue(password);
                     driver.child("capacity").setValue(capacity);
 
+                    driverFName = firstName;
+                    driverLName = lastName;
+                    driverCapacity = capacity;
+
                     ShowToast("Account Saved successfully!");
-                    //clear fields
+                    clear();
                 }
 
             }
@@ -139,11 +148,19 @@ public class FragmentProfile extends Fragment {
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //clear fields
+                clear();
             }
         });
 
         return rootView;
+    }
+
+    void clear(){
+        txtFirstName.setText(driverFName);
+        txtLastName.setText(driverLName);
+        numCapacity.setValue(driverCapacity);
+        txtPassword.setText("");
+        txtConfirmPass.setText("");
     }
 
     void ShowToast(String message){ Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show(); }
