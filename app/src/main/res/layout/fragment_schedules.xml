@@ -17,9 +17,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Manage Departure Times"
+            android:fontFamily="@font/bold"
+            android:textColor="@color/mclblue"
             android:layout_marginBottom="25dp"
             android:layout_marginLeft="20dp"
-            android:textSize="24dp" />
+            android:textSize="22dp" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -52,11 +54,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textSize="18dp"
-            android:text="Add New Time"
-            android:paddingRight="25dp"
+            android:background="@drawable/btnblue"
+            android:drawableLeft="@drawable/ic_add"
+            android:drawablePadding="1dip"
             android:paddingLeft="25dp"
-            android:textAllCaps="false" />
+            android:paddingRight="25dp"
+            android:text="Add New"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="18dp" />
 
     </LinearLayout>
 

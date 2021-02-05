@@ -1,5 +1,6 @@
 package com.example.MCLShuttleTracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -33,7 +34,7 @@ public class FragmentProfile extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    Button btnSave, btnCancel;
+    Button btnSave;
     EditText txtDriverId, txtFirstName, txtLastName, txtPassword, txtConfirmPass;
     NumberPicker numCapacity;
 
@@ -82,7 +83,6 @@ public class FragmentProfile extends Fragment {
         driverId = getActivity().getIntent().getStringExtra("driverId");
 
         btnSave = rootView.findViewById(R.id.btnSave2);
-        btnCancel = rootView.findViewById(R.id.btnCancel2);
         txtDriverId = rootView.findViewById(R.id.txtDriverId2);
         txtFirstName = rootView.findViewById(R.id.txtFirstName2);
         txtLastName = rootView.findViewById(R.id.txtLastName2);
@@ -143,12 +143,6 @@ public class FragmentProfile extends Fragment {
                     clear();
                 }
 
-            }
-        });
-
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                clear();
             }
         });
 
