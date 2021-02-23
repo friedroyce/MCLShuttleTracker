@@ -27,12 +27,13 @@ import java.util.Date;
 public class ActivityTransitEdit extends AppCompatActivity {
 
     String driverId, transitId, schedID, fromID, toID;
-    int schedPos = 0, fromPos = 0, toPos = 0;
+    int schedPos = 0, fromPos = 0, toPos = 0, hour = 0;
 
     Button btnSave, btnCancel, btnDelete;
     Spinner spnSchedule, spnFrom, spnTo;
+    TextView txtSchedule;
 
-    DatabaseReference refRoot, refSchedules, refStations, refTransits;
+    DatabaseReference refRoot, refSchedules, refStations, refTransits, refDriver;
 
     FirebaseListOptions<DestinationModel> optionsStation;
     DestinationModel[] stationArr;
@@ -50,74 +51,41 @@ public class ActivityTransitEdit extends AppCompatActivity {
         fromID = getIntent().getStringExtra("from");
         toID = getIntent().getStringExtra("to");
 
-        //ShowToast(toID);
-
         btnSave = findViewById(R.id.btnSave);
         btnCancel = findViewById(R.id.btnCancel);
         btnDelete = findViewById(R.id.btnDelete);
-        spnSchedule = findViewById(R.id.spnSchedule);
+        txtSchedule = findViewById(R.id.txtSchedule);
         spnFrom = findViewById(R.id.spnFrom);
         spnTo = findViewById(R.id.spnTo);
 
         refRoot = FirebaseDatabase.getInstance().getReference();
         refSchedules = refRoot.child("Schedules");
         refStations = refRoot.child("Stations");
-        refTransits = refRoot.child("Transits/" + driverId);
+        refDriver = refRoot.child("Drivers/" + driverId);
+        refTransits = refRoot.child("Transits");
 
-        refSchedules.addListenerForSingleValueEvent(new ValueEventListener() {
+        refSchedules.child(schedID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String count = String.valueOf(dataSnapshot.getChildrenCount());
-                scheduleArr = new ScheduleModel[Integer.valueOf(count)];
 
-                optionsSchedule = new FirebaseListOptions.Builder<ScheduleModel>().setQuery(refSchedules.orderByChild("hour"), ScheduleModel.class).setLayout(R.layout.spinner_item_schedule).build();
+                hour = Integer.parseInt(dataSnapshot.child("hour").getValue().toString());
 
-                FirebaseListAdapter<ScheduleModel> firebaseListAdapter = new FirebaseListAdapter<ScheduleModel>(optionsSchedule) {
-                    @Override
-                    protected void populateView(@NonNull View v, @NonNull ScheduleModel model, int position) {
+                String time = dataSnapshot.child("hour").getValue() + ":" + dataSnapshot.child("minute").getValue();
+                SimpleDateFormat f24hours = new SimpleDateFormat("HH:mm");
 
-                        DatabaseReference itemRef = getRef(position);
+                final Date date;
+                try {
+                    date = f24hours.parse(time);
 
-                        TextView txtTime = v.findViewById(R.id.txtTime);
+                    final SimpleDateFormat f12hours = new SimpleDateFormat("hh:mm aa");
 
-                        String time = model.getHour() + ":" + model.getMinute();
-                        SimpleDateFormat f24hours = new SimpleDateFormat(
-                                "HH:mm"
-                        );
+                    final String time12hr = f12hours.format(date);
 
-                        final Date date;
-                        try {
-                            date = f24hours.parse(time);
+                    txtSchedule.setText(time12hr);
 
-                            final SimpleDateFormat f12hours = new SimpleDateFormat(
-                                    "hh:mm aa"
-                            );
-
-                            final String time12hr = f12hours.format(date);
-
-                            txtTime.setText(time12hr);
-
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
-                        scheduleArr[position] = new ScheduleModel();
-                        scheduleArr[position].setId(itemRef.getKey());
-                        scheduleArr[position].setHour(model.getHour());
-                        scheduleArr[position].setMinute(model.getMinute());
-
-                    }
-                };
-
-                firebaseListAdapter.startListening();
-                spnSchedule.setAdapter(firebaseListAdapter);
-
-//                for(int i = 0; i < scheduleArr.length; i++){
-//                    if(scheduleArr[i].getId() == schedID)
-//                        schedPos = i;
-//                }
-
-//                spnSchedule.setSelection(schedPos);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -166,12 +134,6 @@ public class ActivityTransitEdit extends AppCompatActivity {
                 firebaseListAdapter.startListening();
                 spnFrom.setAdapter(firebaseListAdapter);
                 spnTo.setAdapter(firebaseListAdapter);
-//                for(int i = 0; i < stationArr.length; i++){
-////                    if(stationArr[i].getId() == fromID)
-////                        fromPos = i;
-//                    if(stationArr[i].getId() == toID)
-//                        toPos = i;
-//                }
 
             }
 
@@ -199,6 +161,7 @@ public class ActivityTransitEdit extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
 
+                                refDriver.child("transits").child(transitId).removeValue();
                                 refTransits.child(transitId).removeValue();
 
                                 ShowToast("Location Deleted Successfully");
@@ -218,30 +181,20 @@ public class ActivityTransitEdit extends AppCompatActivity {
                     ShowToast("You cannot set the same stations");
                 }
                 else{
-                    refTransits.addListenerForSingleValueEvent(new ValueEventListener() {
+                    refDriver.child("transits").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            for(DataSnapshot ds : dataSnapshot.getChildren()){
-
-                                String schedId = ds.child("sched").getValue().toString();
-                                String driver = ds.child("driver").getValue().toString();
-
-                                if (schedId == scheduleArr[spnSchedule.getSelectedItemPosition()].getId() && driverId == driver){
-                                    ShowToast("You already have a transit scheduled for this time");
-                                    return;
-                                }
-
-                            }
-
-                            DatabaseReference transit = refTransits.push();
+                            DatabaseReference transit = refTransits.child(transitId);
                             transit.child("driver").setValue(driverId);
-                            transit.child("hour").setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getHour());
-                            transit.child("sched").setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getId());
+                            transit.child("hour").setValue(hour);
+                            transit.child("sched").setValue(schedID);
                             transit.child("from").setValue(stationArr[spnFrom.getSelectedItemPosition()].getId());
                             transit.child("to").setValue(stationArr[spnTo.getSelectedItemPosition()].getId());
                             transit.child(stationArr[spnFrom.getSelectedItemPosition()].getId()).setValue(true);
                             transit.child(stationArr[spnTo.getSelectedItemPosition()].getId()).setValue(true);
+
+                            refDriver.child("transits").child(transit.getKey()).setValue(hour);
 
                             ShowToast("Added Successfully");
                             finish();
@@ -256,7 +209,7 @@ public class ActivityTransitEdit extends AppCompatActivity {
             }
         });
 
-        spnSchedule.setSelection(schedPos);
+        //spnSchedule.setSelection(schedPos);
         spnFrom.setSelection(fromPos);
         spnTo.setSelection(toPos);
     }

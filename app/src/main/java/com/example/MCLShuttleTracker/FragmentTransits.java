@@ -55,9 +55,9 @@ public class FragmentTransits extends Fragment {
     ArrayList<ModelTransit> arrTansits = new ArrayList<>();
 
 
-    DatabaseReference refRoot, refTransits, refSchedules, refDesinations;
+    DatabaseReference refRoot, refTransits, refSchedules, refDesinations, refDriver;
 
-    FirebaseListOptions<ModelTransit> options;
+    FirebaseListOptions<Integer> options;
 
     String driverId;
 
@@ -104,85 +104,107 @@ public class FragmentTransits extends Fragment {
         lstTransits = (ListView) rootView.findViewById(R.id.lstTransits);
 
         refRoot = FirebaseDatabase.getInstance().getReference();
-        refTransits = refRoot.child("Transits/"+driverId);
+        refDriver = refRoot.child("Drivers/"+driverId);
+        refTransits = refRoot.child("Transits");
         refSchedules = refRoot.child("Schedules");
         refDesinations = refRoot.child("Stations");
 
-        options = new FirebaseListOptions.Builder<ModelTransit>().setQuery(refTransits.orderByChild("hour"), ModelTransit.class).setLayout(R.layout.list_item_transit).build();
+        options = new FirebaseListOptions.Builder<Integer>().setQuery(refDriver.child("transits").orderByValue(), Integer.class).setLayout(R.layout.list_item_transit).build();
 
-        FirebaseListAdapter<ModelTransit> firebaseListAdapter = new FirebaseListAdapter<ModelTransit>(options) {
-            @Override
-            protected void populateView(@NonNull View v, @NonNull final ModelTransit model, int position) {
+            FirebaseListAdapter<Integer> firebaseListAdapter = new FirebaseListAdapter<Integer>(options) {
+                @Override
+                protected void populateView(@NonNull View v, @NonNull final Integer hour, int position) {
 
-                DatabaseReference itemRef = getRef(position);
+                    DatabaseReference itemRef = getRef(position);
 
-                final TextView txtTime = v.findViewById(R.id.txtTime);
-                final TextView txtFrom = v.findViewById(R.id.txtFrom);
-                final TextView txtTo = v.findViewById(R.id.txtTo);
+                    final ModelTransit modelTransit = new ModelTransit();
+                    modelTransit.setId(itemRef.getKey());
 
+                    final TextView txtTime = v.findViewById(R.id.txtTime);
+                    final TextView txtFrom = v.findViewById(R.id.txtFrom);
+                    final TextView txtTo = v.findViewById(R.id.txtTo);
 
-//                get time from sched table
+                    refTransits.child(itemRef.getKey()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                refSchedules.child(model.getSched()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.exists()){
 
-                        String time =  dataSnapshot.child("hour").getValue() + ":" + dataSnapshot.child("minute").getValue();
+                                modelTransit.setDriver(dataSnapshot.child("driver").getValue().toString());
+                                modelTransit.setFrom(dataSnapshot.child("from").getValue().toString());
+                                modelTransit.setTo(dataSnapshot.child("to").getValue().toString());
+                                modelTransit.setSched(dataSnapshot.child("sched").getValue().toString());
 
-                        SimpleDateFormat f24hours = new SimpleDateFormat(
-                                "HH:mm"
-                        );
+                                refSchedules.child(modelTransit.getSched()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        final Date date;
-                        try {
-                            date = f24hours.parse(time);
+                                        if(dataSnapshot.exists()){
 
-                            final SimpleDateFormat f12hours = new SimpleDateFormat(
-                                    "hh:mm aa"
-                            );
+                                            String time =  dataSnapshot.child("hour").getValue() + ":" + dataSnapshot.child("minute").getValue();
+                                            SimpleDateFormat f24hours = new SimpleDateFormat("HH:mm");
+                                            final Date date;
 
-                            final String time12hr = f12hours.format(date);
+                                            try {
 
-                            txtTime.setText(time12hr);
+                                                date = f24hours.parse(time);
+                                                final SimpleDateFormat f12hours = new SimpleDateFormat("hh:mm aa");
+                                                final String time12hr = f12hours.format(date);
 
-                        } catch (ParseException e) {
-                            e.printStackTrace();
+                                                txtTime.setText(time12hr);
+
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError error) {
+                                        //ShowToast("Failed to read database");
+                                    }
+                                });
+
+                                refDesinations.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                        if(dataSnapshot.exists()){
+
+                                            String from =  dataSnapshot.child(modelTransit.getFrom()).child("name").getValue().toString();
+                                            String to =  dataSnapshot.child(modelTransit.getTo()).child("name").getValue().toString();
+
+                                            txtFrom.setText(from);
+                                            txtTo.setText(to);
+
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError error) {
+                                        //ShowToast("Failed to read database");
+                                    }
+                                });
+
+                            }
+
                         }
 
-                    }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                        //ShowToast("Failed to read database");
-                    }
-                });
+                        }
+                    });
 
-                //get destination ref here
+                    arrTansits.add(modelTransit);
 
-                refDesinations.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                }
+            };
 
-                        String from =  dataSnapshot.child(model.getFrom()).child("name").getValue().toString();
-                        String to =  dataSnapshot.child(model.getTo()).child("name").getValue().toString();
-
-                        txtFrom.setText(from);
-                        txtTo.setText(to);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                        //ShowToast("Failed to read database");
-                    }
-                });
-
-
-                arrTansits.add(new ModelTransit(itemRef.getKey(), model.getDriver(), model.getSched(), model.getFrom(), model.getTo()));
-            }
-        };
-
-        firebaseListAdapter.startListening();
-        lstTransits.setAdapter(firebaseListAdapter);
+            firebaseListAdapter.startListening();
+            lstTransits.setAdapter(firebaseListAdapter);
 
         btnAddTransit.setOnClickListener(new View.OnClickListener() {
             @Override

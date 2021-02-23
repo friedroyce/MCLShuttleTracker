@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -29,7 +30,7 @@ public class ActivityTransitAdd extends AppCompatActivity {
     Button btnAdd, btnCancel;
     Spinner spnSchedule, spnFrom, spnTo;
 
-    DatabaseReference refRoot, refSchedules, refStations, refTransits;
+    DatabaseReference refRoot, refSchedules, refStations, refTransits, refDriver;
 
     FirebaseListOptions<DestinationModel> optionsStation;
     DestinationModel[] stationArr;
@@ -52,7 +53,8 @@ public class ActivityTransitAdd extends AppCompatActivity {
         refRoot = FirebaseDatabase.getInstance().getReference();
         refSchedules = refRoot.child("Schedules");
         refStations = refRoot.child("Stations");
-        refTransits = refRoot.child("Transits/" + driverId);
+        refDriver = refRoot.child("Drivers/" + driverId);
+        refTransits = refRoot.child("Transits");
 
         refSchedules.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -163,16 +165,16 @@ public class ActivityTransitAdd extends AppCompatActivity {
                     ShowToast("You cannot set the same stations");
                 }
                 else{
-                    refTransits.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                    refDriver.child("transits").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
                             for(DataSnapshot ds : dataSnapshot.getChildren()){
 
-                                String schedId = ds.child("sched").getValue().toString();
-                                String driver = ds.child("driver").getValue().toString();
+                                String hour = String.valueOf(scheduleArr[spnSchedule.getSelectedItemPosition()].getHour());
 
-                                if (schedId == scheduleArr[spnSchedule.getSelectedItemPosition()].getId() && driverId == driver){
+                                if (ds.getValue().equals(hour)){
                                     ShowToast("You already have a transit scheduled for this time");
                                     return;
                                 }
@@ -187,6 +189,8 @@ public class ActivityTransitAdd extends AppCompatActivity {
                             transit.child("to").setValue(stationArr[spnTo.getSelectedItemPosition()].getId());
                             transit.child(stationArr[spnFrom.getSelectedItemPosition()].getId()).setValue(true);
                             transit.child(stationArr[spnTo.getSelectedItemPosition()].getId()).setValue(true);
+
+                            refDriver.child("transits").child(transit.getKey()).setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getHour());
 
                             ShowToast("Added Successfully");
                             finish();

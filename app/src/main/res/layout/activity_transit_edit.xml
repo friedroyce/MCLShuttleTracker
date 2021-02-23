@@ -24,13 +24,14 @@
         android:layout_marginTop="10dp"
         android:textSize="16dp" />
 
-    <Spinner
-        android:id="@+id/spnSchedule"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/txtSchedule"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:text="Schedule"
+        android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"/>
+        android:textSize="20dp" />
 
     <TextView
         android:layout_width="wrap_content"
