@@ -182,6 +182,7 @@ public class ActivityTransitAdd extends AppCompatActivity {
                             }
 
                             DatabaseReference transit = refTransits.push();
+
                             transit.child("driver").setValue(driverId);
                             transit.child("hour").setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getHour());
                             transit.child("sched").setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getId());
@@ -190,6 +191,7 @@ public class ActivityTransitAdd extends AppCompatActivity {
                             transit.child(stationArr[spnFrom.getSelectedItemPosition()].getId()).setValue(true);
                             transit.child(stationArr[spnTo.getSelectedItemPosition()].getId()).setValue(true);
 
+                            refSchedules.child(scheduleArr[spnSchedule.getSelectedItemPosition()].getId()).child("transits").child(transit.getKey()).setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getHour());
                             refDriver.child("transits").child(transit.getKey()).setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getHour());
 
                             ShowToast("Added Successfully");

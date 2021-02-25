@@ -162,6 +162,7 @@ public class ActivityTransitEdit extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
 
                                 refDriver.child("transits").child(transitId).removeValue();
+                                refSchedules.child(schedID).child("transits").child(transitId).removeValue();
                                 refTransits.child(transitId).removeValue();
 
                                 ShowToast("Location Deleted Successfully");
@@ -194,6 +195,7 @@ public class ActivityTransitEdit extends AppCompatActivity {
                             transit.child(stationArr[spnFrom.getSelectedItemPosition()].getId()).setValue(true);
                             transit.child(stationArr[spnTo.getSelectedItemPosition()].getId()).setValue(true);
 
+                            refSchedules.child(schedID).child("transits").child(transit.getKey()).setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getHour());
                             refDriver.child("transits").child(transit.getKey()).setValue(hour);
 
                             ShowToast("Added Successfully");
