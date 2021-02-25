@@ -188,10 +188,11 @@ public class ActivityTransitAdd extends AppCompatActivity {
                             transit.child("sched").setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getId());
                             transit.child("from").setValue(stationArr[spnFrom.getSelectedItemPosition()].getId());
                             transit.child("to").setValue(stationArr[spnTo.getSelectedItemPosition()].getId());
-                            transit.child(stationArr[spnFrom.getSelectedItemPosition()].getId()).setValue(true);
-                            transit.child(stationArr[spnTo.getSelectedItemPosition()].getId()).setValue(true);
+//                            transit.child(stationArr[spnFrom.getSelectedItemPosition()].getId()).setValue(true);
+//                            transit.child(stationArr[spnTo.getSelectedItemPosition()].getId()).setValue(true);
 
-                            refSchedules.child(scheduleArr[spnSchedule.getSelectedItemPosition()].getId()).child("transits").child(transit.getKey()).setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getHour());
+                            refSchedules.child(scheduleArr[spnSchedule.getSelectedItemPosition()].getId()).child("transits").child(transit.getKey()).child(stationArr[spnFrom.getSelectedItemPosition()].getId()).setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getHour());
+                            refSchedules.child(scheduleArr[spnSchedule.getSelectedItemPosition()].getId()).child("transits").child(transit.getKey()).child(stationArr[spnTo.getSelectedItemPosition()].getId()).setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getHour());
                             refDriver.child("transits").child(transit.getKey()).setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getHour());
 
                             ShowToast("Added Successfully");
