@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,7 +31,7 @@ public class ActivityTransitEdit extends AppCompatActivity {
     int schedPos = 0, fromPos = 0, toPos = 0, hour = 0;
 
     Button btnSave, btnCancel, btnDelete;
-    Spinner spnSchedule, spnFrom, spnTo;
+    Spinner spnFrom, spnTo;
     TextView txtSchedule;
 
     DatabaseReference refRoot, refSchedules, refStations, refTransits, refDriver;
@@ -68,8 +69,7 @@ public class ActivityTransitEdit extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                hour = Integer.parseInt(dataSnapshot.child("hour").getValue().toString());
-
+                hour = Integer.parseInt(new DecimalFormat("00").format(dataSnapshot.child("hour").getValue()) + new DecimalFormat("00").format(dataSnapshot.child("minute").getValue()));
                 String time = dataSnapshot.child("hour").getValue() + ":" + dataSnapshot.child("minute").getValue();
                 SimpleDateFormat f24hours = new SimpleDateFormat("HH:mm");
 
@@ -117,19 +117,23 @@ public class ActivityTransitEdit extends AppCompatActivity {
                         stationArr[position].setLatitude(model.getLatitude());
                         stationArr[position].setLongitude(model.getLongitude());
                         stationArr[position].setAddress(model.getAddress());
-
-                        if(stationArr[position].getId() == fromID){
-                            fromPos = position;
-                            spnFrom.setSelection(fromPos);
-                            ShowToast("true");
-                        }
-                        if(stationArr[position].getId() == toID){
-                            toPos = position;
-                            spnTo.setSelection(toPos);
-                        }
-
                     }
                 };
+
+//                int i = 0;
+//                for(DataSnapshot station : dataSnapshot.getChildren()){
+//                    if(station.getKey().equals(fromID)){
+//                        fromPos = i;
+//                        spnFrom.setSelection(fromPos);
+//                        ShowToast(fromPos +"from " + fromID);
+//                    }
+//                    if(station.getKey().equals(toID)){
+//                        toPos = i;
+//                        spnTo.setSelection(toPos);
+//                        ShowToast(toPos +"to " + toID);
+//                    }
+//                    i++;
+//                }
 
                 firebaseListAdapter.startListening();
                 spnFrom.setAdapter(firebaseListAdapter);
@@ -195,8 +199,8 @@ public class ActivityTransitEdit extends AppCompatActivity {
 //                            transit.child(stationArr[spnFrom.getSelectedItemPosition()].getId()).setValue(true);
 //                            transit.child(stationArr[spnTo.getSelectedItemPosition()].getId()).setValue(true);
 
-                            refSchedules.child(scheduleArr[spnSchedule.getSelectedItemPosition()].getId()).child("transits").child(transit.getKey()).child(stationArr[spnFrom.getSelectedItemPosition()].getId()).setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getHour());
-                            refSchedules.child(scheduleArr[spnSchedule.getSelectedItemPosition()].getId()).child("transits").child(transit.getKey()).child(stationArr[spnTo.getSelectedItemPosition()].getId()).setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getHour());
+                            refSchedules.child(schedID).child("transits").child(transit.getKey()).child(stationArr[spnFrom.getSelectedItemPosition()].getId()).setValue(hour);
+                            refSchedules.child(schedID).child("transits").child(transit.getKey()).child(stationArr[spnTo.getSelectedItemPosition()].getId()).setValue(hour);
                             refDriver.child("transits").child(transit.getKey()).setValue(hour);
 
                             ShowToast("Added Successfully");

@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -183,17 +184,19 @@ public class ActivityTransitAdd extends AppCompatActivity {
 
                             DatabaseReference transit = refTransits.push();
 
+                            int time = Integer.parseInt(new DecimalFormat("00").format(scheduleArr[spnSchedule.getSelectedItemPosition()].getHour()) + new DecimalFormat("00").format(scheduleArr[spnSchedule.getSelectedItemPosition()].getMinute()));
+
                             transit.child("driver").setValue(driverId);
-                            transit.child("hour").setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getHour());
+                            transit.child("hour").setValue(time);
                             transit.child("sched").setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getId());
                             transit.child("from").setValue(stationArr[spnFrom.getSelectedItemPosition()].getId());
                             transit.child("to").setValue(stationArr[spnTo.getSelectedItemPosition()].getId());
 //                            transit.child(stationArr[spnFrom.getSelectedItemPosition()].getId()).setValue(true);
 //                            transit.child(stationArr[spnTo.getSelectedItemPosition()].getId()).setValue(true);
 
-                            refSchedules.child(scheduleArr[spnSchedule.getSelectedItemPosition()].getId()).child("transits").child(transit.getKey()).child(stationArr[spnFrom.getSelectedItemPosition()].getId()).setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getHour());
-                            refSchedules.child(scheduleArr[spnSchedule.getSelectedItemPosition()].getId()).child("transits").child(transit.getKey()).child(stationArr[spnTo.getSelectedItemPosition()].getId()).setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getHour());
-                            refDriver.child("transits").child(transit.getKey()).setValue(scheduleArr[spnSchedule.getSelectedItemPosition()].getHour());
+                            refSchedules.child(scheduleArr[spnSchedule.getSelectedItemPosition()].getId()).child("transits").child(transit.getKey()).child(stationArr[spnFrom.getSelectedItemPosition()].getId()).setValue(time);
+                            refSchedules.child(scheduleArr[spnSchedule.getSelectedItemPosition()].getId()).child("transits").child(transit.getKey()).child(stationArr[spnTo.getSelectedItemPosition()].getId()).setValue(time);
+                            refDriver.child("transits").child(transit.getKey()).setValue(time);
 
                             ShowToast("Added Successfully");
                             finish();
