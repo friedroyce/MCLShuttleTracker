@@ -199,8 +199,8 @@ public class ActivityTransitEdit extends AppCompatActivity {
 //                            transit.child(stationArr[spnFrom.getSelectedItemPosition()].getId()).setValue(true);
 //                            transit.child(stationArr[spnTo.getSelectedItemPosition()].getId()).setValue(true);
 
-                            refSchedules.child(schedID).child("transits").child(transit.getKey()).child(stationArr[spnFrom.getSelectedItemPosition()].getId()).setValue(hour);
-                            refSchedules.child(schedID).child("transits").child(transit.getKey()).child(stationArr[spnTo.getSelectedItemPosition()].getId()).setValue(hour);
+                            refSchedules.child(schedID).child("transits").child(transit.getKey()).child(stationArr[spnFrom.getSelectedItemPosition()].getId()).setValue("from");
+                            refSchedules.child(schedID).child("transits").child(transit.getKey()).child(stationArr[spnTo.getSelectedItemPosition()].getId()).setValue("destination");
                             refDriver.child("transits").child(transit.getKey()).setValue(hour);
 
                             ShowToast("Added Successfully");

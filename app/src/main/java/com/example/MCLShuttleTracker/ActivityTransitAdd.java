@@ -194,8 +194,8 @@ public class ActivityTransitAdd extends AppCompatActivity {
 //                            transit.child(stationArr[spnFrom.getSelectedItemPosition()].getId()).setValue(true);
 //                            transit.child(stationArr[spnTo.getSelectedItemPosition()].getId()).setValue(true);
 
-                            refSchedules.child(scheduleArr[spnSchedule.getSelectedItemPosition()].getId()).child("transits").child(transit.getKey()).child(stationArr[spnFrom.getSelectedItemPosition()].getId()).setValue(time);
-                            refSchedules.child(scheduleArr[spnSchedule.getSelectedItemPosition()].getId()).child("transits").child(transit.getKey()).child(stationArr[spnTo.getSelectedItemPosition()].getId()).setValue(time);
+                            refSchedules.child(scheduleArr[spnSchedule.getSelectedItemPosition()].getId()).child("transits").child(transit.getKey()).child(stationArr[spnFrom.getSelectedItemPosition()].getId()).setValue("from");
+                            refSchedules.child(scheduleArr[spnSchedule.getSelectedItemPosition()].getId()).child("transits").child(transit.getKey()).child(stationArr[spnTo.getSelectedItemPosition()].getId()).setValue("destination");
                             refDriver.child("transits").child(transit.getKey()).setValue(time);
 
                             ShowToast("Added Successfully");
