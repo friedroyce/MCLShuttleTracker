@@ -15,6 +15,7 @@ import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,7 +35,7 @@ public class FragmentProfile extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    Button btnSave;
+    Button btnSave, btnLogout;
     EditText txtDriverId, txtFirstName, txtLastName, txtPassword, txtConfirmPass;
     NumberPicker numCapacity;
 
@@ -83,6 +84,7 @@ public class FragmentProfile extends Fragment {
         driverId = getActivity().getIntent().getStringExtra("driverId");
 
         btnSave = rootView.findViewById(R.id.btnSave2);
+        btnLogout = rootView.findViewById(R.id.btnLogout);
         txtDriverId = rootView.findViewById(R.id.txtDriverId2);
         txtFirstName = rootView.findViewById(R.id.txtFirstName2);
         txtLastName = rootView.findViewById(R.id.txtLastName2);
@@ -143,6 +145,16 @@ public class FragmentProfile extends Fragment {
                     clear();
                 }
 
+            }
+        });
+
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(FragmentProfile.this.getActivity(), AccountLoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         });
 
